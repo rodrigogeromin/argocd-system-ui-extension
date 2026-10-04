@@ -59,9 +59,9 @@ O gerador e o contrato estão registrados em `extension-project.json`; a auditor
 
 ```sh
 # Depois de atualizar a versão também no package-lock.json e commitar:
-git tag v0.2.2
+git tag v0.2.3
 git push origin develop
-git push origin v0.2.2
+git push origin v0.2.3
 ```
 
 Assets publicados:
@@ -73,7 +73,7 @@ Assets publicados:
 
 O workflow usa `GITHUB_TOKEN` com `contents: write`, sem PAT adicional. As URLs fornecidas pressupõem repositório público. Para releases privadas, use os endpoints de assets da API do GitHub e o mecanismo de headers montados de Secret do installer.
 
-A release **v0.2.2** adiciona a navegação lista/detalhe e parâmetros Helm editáveis, usando **Addons** no menu, e preserva as correções de registro React 19 e consulta por projeto. Veja [evidências de implantação e limites](docs/integration.md). A seleção de addons só instala controllers após o botão de confirmação.
+A release **v0.2.3** adiciona a navegação lista/detalhe e parâmetros Helm editáveis, usando **Addons** no menu, e preserva as correções de registro React 19 e consulta por projeto. Veja [evidências de implantação e limites](docs/integration.md). A seleção de addons só instala controllers após o botão de confirmação.
 
 ## Instalar com argocd-extension-installer v1.1.0
 
