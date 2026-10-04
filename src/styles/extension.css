@@ -52,7 +52,7 @@
 #argocd-ext-argo-rollouts-installer .catalog-card-heading i { color: var(--rollouts-accent); font-size: 20px; }
 #argocd-ext-argo-rollouts-installer .catalog-category { font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
 #argocd-ext-argo-rollouts-installer .catalog-badge { margin-left: auto; padding: 4px 7px; border: 1px solid var(--rollouts-border); border-radius: 5px; font-size: 10px; white-space: nowrap; }
-#argocd-ext-argo-rollouts-installer .phase-ready { color: var(--rollouts-accent); }
+#argocd-ext-argo-rollouts-installer :is(.phase-ready, .phase-installed) { color: var(--rollouts-accent); }
 #argocd-ext-argo-rollouts-installer .phase-error { color: #d45454; }
 #argocd-ext-argo-rollouts-installer .catalog-addon fieldset label { margin-bottom: 14px; }
 #argocd-ext-argo-rollouts-installer .catalog-selection { margin: 24px 0; display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }

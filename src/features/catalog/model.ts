@@ -1,5 +1,5 @@
 import definitions from './addons.json';
-import type {AddonApplication, AddonConfig, AddonConfigs, AddonDefinition, TargetConfig} from './types';
+import type {AddonApplication, AddonConfig, AddonConfigs, AddonDefinition, AddonState, TargetConfig} from './types';
 export const addons: readonly AddonDefinition[] = definitions;
 export const targetDefaults: TargetConfig = {applicationNamespace: 'argocd', project: 'default', server: 'https://kubernetes.default.svc', platform: 'k3d', prometheusURL: ''};
 export function defaultConfigs(): AddonConfigs {return Object.fromEntries(addons.map(addon => [addon.id, {name: addon.id, namespace: addon.namespace, version: addon.version, values: '{}'}]));}
@@ -90,6 +90,7 @@ export function buildAddonApplication(addon: AddonDefinition, config: AddonConfi
     {group: 'admissionregistration.k8s.io', kind: 'MutatingWebhookConfiguration', jqPathExpressions: ['.webhooks[]?.clientConfig.caBundle']},
     {group: 'admissionregistration.k8s.io', kind: 'ValidatingWebhookConfiguration', jqPathExpressions: ['.webhooks[]?.clientConfig.caBundle', ...(addon.repository.includes('istio-release') ? ['.webhooks[]?.failurePolicy'] : [])]}
   ];
+  if (addon.id === 'kyverno') ignoreDifferences.push(kyvernoEmptyMetadataRule);
   const mergedValues = merge(values, parseValues(config.values));
   if (addon.id === 'grafana') {
     const fullname = typeof mergedValues.fullnameOverride === 'string' ? mergedValues.fullnameOverride : config.name;
@@ -111,3 +112,17 @@ export function applicationFailure(app: AddonApplication): string | undefined {
   if (['Failed', 'Error'].includes(app.status?.operationState?.phase ?? '')) return app.status?.operationState?.message || 'A sincronização falhou. Abra a Application para diagnóstico.';
 }
 export function applicationReady(app: AddonApplication): boolean {return app.status?.health?.status === 'Healthy' && app.status.sync?.status === 'Synced' && app.status.operationState?.phase !== 'Running' && !applicationFailure(app);}
+
+export const kyvernoEmptyMetadataRule = {
+  group: 'apiextensions.k8s.io', kind: 'CustomResourceDefinition',
+  jqPathExpressions: ['annotations', 'labels'].map(field => `select(.metadata.name | endswith(".policies.kyverno.io")) | .metadata.${field} | select(. == {})`)
+};
+export function discoveredState(app: AddonApplication | null, addon: AddonDefinition): AddonState {
+  if (!app) return {phase: 'absent'};
+  if (!matchesAddon(app, addon)) return {phase: 'error', app, message: 'Esse nome pertence a outra Application.'};
+  const failure = applicationFailure(app);
+  if (failure) return {phase: 'error', app, message: failure};
+  if (applicationReady(app)) return {phase: 'ready', app};
+  if (app.status?.health?.status === 'Healthy' && app.status.operationState?.phase !== 'Running') return {phase: 'installed', app, message: 'Instalado e saudável; há diferenças a revisar na Application.'};
+  return {phase: 'syncing', app};
+}

@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import {render, screen, fireEvent, waitFor, act} from '@testing-library/react';
+import {render, screen, fireEvent, waitFor, act, within} from '@testing-library/react';
 import {Extension} from '../src/argocd/connected-extension';
 import {register} from '../src/argocd/register';
 import {ArgoClient} from '../src/argocd/api';
@@ -115,4 +115,16 @@ test('installation cancels pending discovery without leaving cards stuck checkin
   fireEvent.click(screen.getByRole('button', {name: 'Instalar selecionados'}));
   await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('Instalação concluída'));
   expect(readSignal.aborted).toBe(true); expect(screen.queryByText('Consultando')).not.toBeInTheDocument(); expect(create).toHaveBeenCalledTimes(1);
+});
+
+test('automatically shows Healthy Kyverno as installed while exposing OutOfSync', async () => {
+  const configs = (await import('../src/features/catalog/model')).defaultConfigs();
+  const {buildAddonApplication, getAddon, resolvePlan, targetDefaults} = await import('../src/features/catalog/model');
+  const app = {...buildAddonApplication(getAddon('kyverno'), configs.kyverno, targetDefaults, configs, resolvePlan(['kyverno'])), status: {health: {status: 'Healthy'}, sync: {status: 'OutOfSync'}}};
+  jest.spyOn(ArgoClient.prototype, 'get').mockImplementation(async name => name === 'kyverno' ? app : null);
+  render(<Extension/>);
+  await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('Status atualizado'));
+  const card = screen.getByRole('link', {name: 'Ver detalhes de Kyverno'}).closest('article')!;
+  expect(within(card).getByText('Instalado', {exact: true})).toBeInTheDocument();
+  expect(within(card).getByText(/OutOfSync \/ Healthy/)).toBeInTheDocument();
 });

@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
-import {addons, applicationFailure, applicationReady, buildAddonApplication, defaultConfigs, getAddon, matchesAddon, presets, resolvePlan, targetDefaults, validatePlan, validateTarget} from '../features/catalog/model';
+import {addons, discoveredState, buildAddonApplication, defaultConfigs, getAddon, presets, resolvePlan, targetDefaults, validatePlan, validateTarget} from '../features/catalog/model';
 import {installPlan} from '../features/catalog/install';
 import type {AddonConfig, AddonConfigs, AddonState, CatalogServices, TargetConfig} from '../features/catalog/types';
 import type {ExtensionProps} from '../argocd/types';
@@ -7,7 +7,7 @@ import '../styles/extension.css';
 import {AddonDetail} from '../features/catalog/AddonDetail';
 function currentAddon() {const id = new URLSearchParams(window.location.search).get('addon'); return addons.some(addon => addon.id === id) ? id : null;}
 function addonURL(id: string | null) {const url = new URL(window.location.href); if (id) url.searchParams.set('addon', id); else url.searchParams.delete('addon'); return url.pathname + url.search + url.hash;}
-const phaseLabels = {absent: 'Não instalado', checking: 'Consultando', queued: 'Na fila', syncing: 'Sincronizando', ready: 'Instalado', error: 'Erro'};
+const phaseLabels = {absent: 'Não instalado', checking: 'Consultando', queued: 'Na fila', syncing: 'Sincronizando', installed: 'Instalado', ready: 'Instalado', error: 'Erro'};
 export function Extension({client}: ExtensionProps & {client: CatalogServices}) {
   const [detailId, setDetailId] = useState<string | null>(currentAddon);
   const detail = detailId ? getAddon(detailId) : undefined;
@@ -61,7 +61,7 @@ export function Extension({client}: ExtensionProps & {client: CatalogServices}) 
           try {
             const app = await client.get(snapshot[addon.id].name, target.applicationNamespace, controller.signal, target.project);
             if (controller.signal.aborted) return;
-            update(addon.id, !app ? {phase: 'absent'} : !matchesAddon(app, addon) ? {phase: 'error', app, message: 'Esse nome pertence a outra Application.'} : applicationFailure(app) ? {phase: 'error', app, message: applicationFailure(app)} : {phase: applicationReady(app) ? 'ready' : 'syncing', app});
+            update(addon.id, discoveredState(app, addon));
           } catch (failure) {if (!controller.signal.aborted) update(addon.id, {phase: 'error', message: failure instanceof Error ? failure.message : 'Falha na consulta.'});}
         }));
       }

@@ -1,4 +1,4 @@
-import {addons, buildAddonApplication, defaultConfigs, getAddon, parseValues, presets, resolvePlan, targetDefaults, validatePlan} from '../src/features/catalog/model';
+import {addons, applicationReady, discoveredState, kyvernoEmptyMetadataRule, buildAddonApplication, defaultConfigs, getAddon, parseValues, presets, resolvePlan, targetDefaults, validatePlan} from '../src/features/catalog/model';
 test('catalog covers the requested platform components and deduplicates dependencies', () => {
   expect(addons.map(addon => addon.id)).toEqual(expect.arrayContaining(['argo-rollouts', 'kyverno', 'external-secrets', 'prometheus', 'grafana', 'istio-base', 'istiod', 'istio-cni', 'istio-ztunnel', 'istio-ingress', 'istio-egress', 'kiali']));
   const plan = resolvePlan(['istio-ztunnel', 'istio-ingress']);
@@ -42,4 +42,20 @@ test('duplicate application names and invalid values are rejected', () => {
   const configs = defaultConfigs(), plan = resolvePlan(['prometheus', 'grafana']);
   configs.grafana.name = 'prometheus'; expect(validatePlan(plan, configs, targetDefaults)).toMatch(/nomes diferentes/);
   configs.grafana.name = 'grafana'; configs.grafana.values = 'invalid'; expect(validatePlan(plan, configs, targetDefaults)).toBeDefined();
+});
+
+test('healthy OutOfSync installation is visible while dependency readiness remains strict', () => {
+  const addon = getAddon('kyverno'), configs = defaultConfigs();
+  const app = {...buildAddonApplication(addon, configs.kyverno, targetDefaults, configs, resolvePlan(['kyverno'])), status: {health: {status: 'Healthy'}, sync: {status: 'OutOfSync'}}};
+  expect(discoveredState(app, addon).phase).toBe('installed'); expect(applicationReady(app)).toBe(false);
+  expect(discoveredState({...app, status: {health: {status: 'Progressing'}, sync: {status: 'Synced'}}}, addon).phase).toBe('syncing');
+  expect(discoveredState(null, addon).phase).toBe('absent');
+});
+test('empty metadata normalization applies only to Kyverno policy CRDs and preserves schema comparison', () => {
+  const configs = defaultConfigs();
+  const kyverno = buildAddonApplication(getAddon('kyverno'), configs.kyverno, targetDefaults, configs, resolvePlan(['kyverno']));
+  expect(kyverno.spec.ignoreDifferences).toContainEqual(kyvernoEmptyMetadataRule);
+  expect(kyvernoEmptyMetadataRule.jqPathExpressions).toEqual(['annotations', 'labels'].map(field => `select(.metadata.name | endswith(".policies.kyverno.io")) | .metadata.${field} | select(. == {})`));
+  const rollouts = buildAddonApplication(getAddon('argo-rollouts'), configs['argo-rollouts'], targetDefaults, configs, resolvePlan(['argo-rollouts']));
+  expect(rollouts.spec.ignoreDifferences).not.toContainEqual(kyvernoEmptyMetadataRule);
 });

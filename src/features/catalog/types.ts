@@ -23,5 +23,5 @@ export interface AddonDefinition {
 export interface TargetConfig {applicationNamespace: string; project: string; server: string; platform: string; prometheusURL: string}
 export interface AddonConfig {name: string; namespace: string; version: string; values: string}
 export type AddonConfigs = Record<string, AddonConfig>;
-export type InstallPhase = 'absent' | 'checking' | 'queued' | 'syncing' | 'ready' | 'error';
+export type InstallPhase = 'absent' | 'checking' | 'queued' | 'syncing' | 'installed' | 'ready' | 'error';
 export interface AddonState {phase: InstallPhase; app?: AddonApplication; message?: string}

@@ -31,6 +31,8 @@ Prometheus desativa o Grafana embutido para evitar instalação duplicada. Grafa
 
 A pilha Istio inclui seus componentes Helm, gateways e observabilidade. Gateway API CRDs, waypoints, tracing, roteamento e inclusão de workloads no mesh exigem configuração posterior. O catálogo não rotula namespaces existentes. CNI ajusta caminhos por plataforma e exige acesso ao host. Os gateways usam ClusterIP para não conflitar com Traefik no k3d. Kyverno exige policies posteriores; External Secrets exige SecretStore/ClusterSecretStore e credenciais de provedor.
 
+Um addon Healthy pode aparecer como **Instalado** mesmo quando está OutOfSync; o status de sync continua visível no card. A liberação de dependências e a conclusão da instalação seguem exigindo Synced + Healthy. O Kyverno normaliza somente mapas vazios de annotations/labels nas CRDs de políticas, mantendo a comparação de schemas e metadados preenchidos. Veja o [diagnóstico e a correção do Kyverno](docs/kyverno-troubleshooting.md).
+
 ## Pré-requisitos e RBAC
 
 O usuário precisa de `applications, get` e `applications, create` para o projeto e os nomes selecionados. O AppProject deve permitir todos os repositórios selecionados, destinos e recursos de cluster, incluindo CRDs, ClusterRoles, ClusterRoleBindings e Namespace. O controller precisa das permissões Kubernetes correspondentes. A extension não altera RBAC, projetos ou sync windows. Applications fora de argocd exigem suporte e allowlist no Argo CD.
@@ -59,9 +61,9 @@ O gerador e o contrato estão registrados em `extension-project.json`; a auditor
 
 ```sh
 # Depois de atualizar a versão também no package-lock.json e commitar:
-git tag v0.2.5
+git tag v0.2.6
 git push origin develop
-git push origin v0.2.5
+git push origin v0.2.6
 ```
 
 Assets publicados:
@@ -74,7 +76,7 @@ Assets publicados:
 
 O workflow usa `GITHUB_TOKEN` com `contents: write`, sem PAT adicional. As URLs fornecidas pressupõem repositório público. Para releases privadas, use os endpoints de assets da API do GitHub e o mecanismo de headers montados de Secret do installer.
 
-A release **v0.2.5** adiciona a navegação lista/detalhe e parâmetros Helm editáveis, usando **Addons** no menu, e preserva as correções de registro React 19 e consulta por projeto. Veja [evidências de implantação e limites](docs/integration.md). A seleção de addons só instala controllers após o botão de confirmação.
+A release **v0.2.6** adiciona a navegação lista/detalhe e parâmetros Helm editáveis, usando **Addons** no menu, e preserva as correções de registro React 19 e consulta por projeto. Veja [evidências de implantação e limites](docs/integration.md). A seleção de addons só instala controllers após o botão de confirmação.
 
 ## Instalar com argocd-extension-installer v1.1.0
 
