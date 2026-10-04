@@ -1,11 +1,11 @@
 {
-  "recordedAt": "2026-10-04T05:52:59.895006+00:00",
+  "recordedAt": "2026-10-04T06:04:42.766629+00:00",
   "target": "3.5.1",
   "sourceTag": "v3.5.1",
   "profile": "system-level",
-  "release": "https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/tag/v0.1.0",
-  "releaseWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37180928263",
-  "ciWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37180918371",
+  "release": "https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/tag/v0.1.1",
+  "releaseWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37181599196",
+  "ciWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37181581309",
   "context": "k3d-dev",
   "namespace": "argocd",
   "deployment": {
@@ -16,18 +16,19 @@
     "servedBundleBytes": "matched",
     "existingExtensions": [
       "service-catalog"
-    ]
+    ],
+    "name": "argocd-server"
   },
-  "pod": "argocd-server-54ff654875-rnfqw",
+  "pod": "argocd-server-59579fdf54-lbrjd",
   "installerImage": "quay.io/argoprojlabs/argocd-extension-installer:v1.1.0@sha256:6cc786ba4dc96ba81d5010fbf92adabef15aff89753a55e22b8d829cd8b6e2a8",
-  "sourceRevision": "068b1fe126f58481dd353ab21b15453d12eb2ffff2537276a292e2d8d05316b5",
-  "bundleSha256": "21724488dfdb5e1a42bfbc543d3deea6f1f54843aa2d590b2468d9b3354e6029",
-  "releasePackageSha256": "7419e70ba57ade3803803b939d3d57bc2e2151dd812806f73fa4d2a3621f7f06",
-  "localPackageSha256": "828658c75bec347c8083eecfbb5a28412a09459f5cb0c8d54225f62ef1de9db3",
+  "sourceRevision": "f1be06f75d03a5c4415e90887423ab3fafefe02889a69f7375471ecdf4c08ef4",
+  "bundleSha256": "2cbc6b224dc7882c8f562ead6c9349505f1a915d4b084d70fa1c96bca01b0573",
+  "releasePackageSha256": "5978b4233461fdb53a1f52984a0ec389578a6f7f9caf3f6ae91fef9031eab3b4",
+  "localPackageSha256": "fb59e34958501d60aa415e2df5fa660452755ae7d07ff2e507331f0c983abe0a",
   "packageDifference": "Local tar entry mode 0664; release tar entry mode 0644. Sources and JS bundle identical.",
   "localValidation": {
     "domainApiTests": 27,
-    "productionHarnessTests": 1,
+    "productionHarnessTests": 2,
     "commands": [
       "npm run runtime:setup",
       "npm ci",
@@ -45,5 +46,19 @@
     "status": "not-run",
     "reason": "Extension was installed; controller creation awaits user action in the page"
   },
-  "integratedVersions": []
+  "integratedVersions": [],
+  "previousRelease": {
+    "version": "v0.1.0",
+    "userReported": "System Level menu entry missing",
+    "regressionReproduced": true
+  },
+  "startupRegression": {
+    "status": "passed",
+    "scenario": "React 19 schedules host mount before the extensions script executes",
+    "expectedMenu": [
+      "Documentation",
+      "Argo Rollouts"
+    ],
+    "registrationCount": 1
+  }
 }
