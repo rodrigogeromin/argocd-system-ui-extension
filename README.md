@@ -58,6 +58,8 @@ Assets publicados:
 
 O workflow usa `GITHUB_TOKEN` com `contents: write`, sem PAT adicional. As URLs fornecidas pressupõem repositório público. Para releases privadas, use os endpoints de assets da API do GitHub e o mecanismo de headers montados de Secret do installer.
 
+A release **v0.1.0** já foi publicada e instalada no Argo CD 3.5.1 do contexto **k3d-dev**. Download, checksum, rollout e bytes servidos foram verificados. Veja [evidências e limites](docs/integration.md). A instalação do controller Rollouts é acionada pelo botão da página.
+
 ## Instalar com argocd-extension-installer v1.1.0
 
 O patch fornecido usa a imagem oficial fixada por digest:
