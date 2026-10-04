@@ -44,9 +44,9 @@ O gerador e o contrato estão registrados em `extension-project.json`; a auditor
 
 ```sh
 # Depois de atualizar a versão também no package-lock.json e commitar:
-git tag v0.1.0
+git tag v0.1.1
 git push origin develop
-git push origin v0.1.0
+git push origin v0.1.1
 ```
 
 Assets publicados:
@@ -58,7 +58,7 @@ Assets publicados:
 
 O workflow usa `GITHUB_TOKEN` com `contents: write`, sem PAT adicional. As URLs fornecidas pressupõem repositório público. Para releases privadas, use os endpoints de assets da API do GitHub e o mecanismo de headers montados de Secret do installer.
 
-A release **v0.1.0** já foi publicada e instalada no Argo CD 3.5.1 do contexto **k3d-dev**. Download, checksum, rollout e bytes servidos foram verificados. Veja [evidências e limites](docs/integration.md). A instalação do controller Rollouts é acionada pelo botão da página.
+A release **v0.1.1** corrige o registro do menu durante a montagem assíncrona do React 19. A evidência de implantação indica a versão instalada no Argo CD 3.5.1 do contexto **k3d-dev**. Veja [evidências e limites](docs/integration.md). A instalação do controller Rollouts é acionada pelo botão da página.
 
 ## Instalar com argocd-extension-installer v1.1.0
 

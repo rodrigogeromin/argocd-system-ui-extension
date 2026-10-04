@@ -1,3 +1,3 @@
-import {register} from './argocd/register';
+import {registerWhenHostMounted} from './argocd/startup';
 import {Extension} from './argocd/connected-extension';
-register(Extension);
+registerWhenHostMounted(Extension);

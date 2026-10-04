@@ -37,6 +37,7 @@ test('production bundle registers and renders against simulated host globals', (
     }
   }
   freeze(frozen);
+  const hostRoot = document.createElement('div'); hostRoot.id = 'app'; hostRoot.innerHTML = '<div>Mounted host</div>'; document.body.appendChild(hostRoot);
   // Indirect eval models the host loading extension JS; this is not Argo CD integration.
   (0, eval)(readFileSync(`dist/resources/extension-${project.name}.js`, 'utf8'));
   expect(register).toHaveBeenCalledWith(...expectedArguments());
@@ -69,5 +70,34 @@ test('production bundle registers and renders against simulated host globals', (
     const flyoutProps=Object.fromEntries((contract.flyoutProps??[]).map(key=>[key,validContext[key as keyof typeof validContext]]));
     render(<Flyout {...flyoutProps}/>);expect(screen.getByRole('heading',{name:'Extension details'})).toBeInTheDocument();
   }
+  hostRoot.remove();
   delete window.extensionsAPI;
+});
+
+test('System Level registration waits for React 19 host mount and appears after Documentation', async () => {
+  const {createRoot} = await import('react-dom/client');
+  const {act} = await import('@testing-library/react');
+  const globals = window as unknown as Record<string, unknown>;
+  globals.React = React; globals.ReactDOM = ReactDOM; globals.ReactJSXRuntime = jsxRuntime;
+  const listeners: Array<(title: string, path: string) => void> = [];
+  class Host extends React.Component<object, {items: Array<{title: string; path: string}>}> {
+    constructor(props: object) {
+      super(props);
+      this.state = {items: [{title: 'Documentation', path: '/documentation'}]};
+      listeners.push((title, path) => this.setState(previous => ({items: [...previous.items, {title, path}]})));
+    }
+    render() { return <nav>{this.state.items.map(item => <a href={item.path} key={item.path}>{item.title}</a>)}</nav>; }
+  }
+  const register = jest.fn((_component: unknown, title: string, path: string) => {listeners.forEach(listener => listener(title, path));});
+  window.extensionsAPI = {registerSystemLevelExtension: register} as unknown as ExtensionsAPI;
+  const container = document.createElement('div'); container.id = 'app'; document.body.appendChild(container);
+  const root = createRoot(container);
+  await act(async () => {
+    // The host schedules App mounting, then the next deferred script executes.
+    root.render(<Host />);
+    (0, eval)(readFileSync(`dist/resources/extension-${project.name}.js`, 'utf8'));
+  });
+  expect(screen.getAllByRole('link').map(link => link.textContent)).toEqual(['Documentation', 'Argo Rollouts']);
+  expect(register).toHaveBeenCalledTimes(1);
+  await act(async () => root.unmount()); container.remove(); delete window.extensionsAPI;
 });
