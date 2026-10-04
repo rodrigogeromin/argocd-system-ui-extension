@@ -25,19 +25,19 @@ export function Extension({client}: ExtensionProps & {client: RolloutsServices})
     const controller = new AbortController(); request.current = controller;
     setBusy(true); setError(''); setNotice('Verificando a Application no Argo CD…');
     try {
-      let current = await client.get(config.name, config.applicationNamespace, controller.signal);
+      let current = await client.get(config.name, config.applicationNamespace, controller.signal, config.project);
       if (!current && create) {
         setNotice('Criando a Application Helm…');
         current = await client.create(buildApplication(config), controller.signal);
       }
       if (controller.signal.aborted) return;
       setApp(current);
-      if (!current) { setNotice('Nenhuma Application encontrada. Revise a configuração e instale.'); return; }
+      if (!current) { setNotice('Nenhuma Application encontrada neste projeto. Revise a configuração e instale.'); return; }
       if (!isRolloutsApplication(current)) { setError('Esse nome já pertence a outra Application. Escolha outro nome; nenhuma alteração foi realizada.'); return; }
       setNotice(create ? 'Application encontrada ou criada. Acompanhando a configuração existente.' : 'Application encontrada. Acompanhando a instalação.');
       const watch = async () => {
         try {
-          const latest = await client.get(config.name, config.applicationNamespace, controller.signal);
+          const latest = await client.get(config.name, config.applicationNamespace, controller.signal, config.project);
           if (controller.signal.aborted) return;
           setApp(latest);
           if (!latest) { setError('A Application foi removida. Consulte novamente antes de instalar.'); return; }

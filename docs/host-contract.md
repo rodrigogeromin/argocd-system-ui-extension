@@ -21,3 +21,11 @@ O bootstrap chama `createRoot(...).render(<App />)`, que agenda uma montagem ass
 Desde v0.1.1, o entrypoint aguarda o primeiro elemento renderizado em `#app` usando MutationObserver antes de registrar. Nesse ponto, o constructor já instalou o listener. Se o host já está montado, registra imediatamente. O observer é desconectado antes do registro para não duplicar itens ao renderizar o menu.
 
 O harness de produção reproduz essa ordem: agenda a montagem com createRoot, executa o bundle no mesmo turno e depois confere `Documentation`, `Argo Rollouts` no menu. Esse teste falhou com v0.1.0 e passou com v0.1.1.
+
+## Application ausente e autenticação admin
+
+A API v3.5.1 implementa `getAppEnforceRBAC` em `server/application/application.go`: quando a Application não existe e nenhum projeto foi informado, retorna PermissionDenied (HTTP 403) para ocultar a existência do recurso. Isso também ocorre para admin. Com um projeto explícito e RBAC autorizado, retorna NotFound (HTTP 404).
+
+A v0.1.2 exige o projeto em todas as consultas GET, enviando `projects=<projeto>` junto de `appNamespace`. Somente 404 permite seguir para a criação; 401/403 continuam bloqueando o fluxo. Os testes cobrem essa distinção e o projeto configurado no preflight e polling.
+
+A reprodução real autenticada como admin confirmou: GET de `argo-rollouts` ausente com apenas `appNamespace=argocd` → 403/code 7; acrescentando `projects=default` → 404/code 5. Nenhuma configuração RBAC foi alterada.

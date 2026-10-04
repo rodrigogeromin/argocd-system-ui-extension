@@ -87,3 +87,16 @@ test('preflight permission failure never attempts creation', async () => {
   await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('Permissão negada'));
   expect(create).not.toHaveBeenCalled();
 });
+test('uses the configured project for preflight and polling', async () => {
+  jest.useFakeTimers();
+  const configured = {...app, spec: {...app.spec, project: 'platform'}};
+  const get = jest.spyOn(ArgoClient.prototype, 'get').mockResolvedValueOnce(null).mockResolvedValue(configured);
+  jest.spyOn(ArgoClient.prototype, 'create').mockResolvedValue(configured);
+  render(<Extension />);
+  fireEvent.change(screen.getByLabelText('Projeto Argo CD'), {target: {value: 'platform'}});
+  fireEvent.click(screen.getByRole('button', {name: 'Instalar Argo Rollouts'}));
+  await waitFor(() => expect(screen.getByRole('button', {name: 'Application criada'})).toBeDisabled());
+  await act(async () => jest.advanceTimersByTime(5000));
+  expect(get).toHaveBeenCalledTimes(2);
+  for (const call of get.mock.calls) expect(call[3]).toBe('platform');
+});

@@ -12,7 +12,7 @@ Extension React/TypeScript para **Argo CD 3.5.1**, registrada como página **Sys
 
 **Consultar instalação** retoma o acompanhamento após recarregar a página, sem criar recursos. Uma Application existente nunca é sobrescrita; a UI apresenta sua versão e destino reais. Se o nome pertencer a outra source, escolha outro nome. Em erro de rede após a criação, consulte novamente antes de instalar. Os parâmetros de uma Application existente ficam bloqueados; alterações e upgrades seguem a gestão normal da Application.
 
-O dashboard opcional é instalado como Service interno, sem publicação de ingress. Não são armazenados tokens nem credenciais. O cliente respeita `<base href>` para instalações do Argo CD em subpaths, valida respostas, limita cada chamada a 20 segundos e cancela o acompanhamento ao sair da página. 401/403 exibem erro de sessão/permissão; somente 404 é tratado como ausência.
+O dashboard opcional é instalado como Service interno, sem publicação de ingress. Não são armazenados tokens nem credenciais. A consulta inclui `projects=<projeto>`: sem esse parâmetro, o Argo CD pode retornar 403 mesmo para admin quando a Application ainda não existe. O cliente respeita `<base href>` para instalações do Argo CD em subpaths, valida respostas, limita cada chamada a 20 segundos e cancela o acompanhamento ao sair da página. 401/403 exibem erro de sessão/permissão; somente 404 é tratado como ausência.
 
 ## Pré-requisitos e RBAC
 
@@ -44,9 +44,9 @@ O gerador e o contrato estão registrados em `extension-project.json`; a auditor
 
 ```sh
 # Depois de atualizar a versão também no package-lock.json e commitar:
-git tag v0.1.1
+git tag v0.1.2
 git push origin develop
-git push origin v0.1.1
+git push origin v0.1.2
 ```
 
 Assets publicados:

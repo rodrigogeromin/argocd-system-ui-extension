@@ -58,7 +58,7 @@ export function isReady(app: RolloutsApplication): boolean {
 }
 
 export interface RolloutsServices {
-  get(name: string, namespace: string, signal: AbortSignal): Promise<RolloutsApplication | null>;
+  get(name: string, namespace: string, signal: AbortSignal, project: string): Promise<RolloutsApplication | null>;
   create(application: RolloutsApplication, signal: AbortSignal): Promise<RolloutsApplication>;
   applicationURL(name: string, namespace: string): string;
 }

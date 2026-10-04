@@ -5,7 +5,7 @@ import type {RolloutsServices} from '../features/rollouts/application';
 import type {ExtensionProps} from './types';
 const api = new ArgoClient();
 const services: RolloutsServices = {
-  get: (name, namespace, signal) => api.get(name, namespace, signal),
+  get: (name, namespace, signal, project) => api.get(name, namespace, signal, project),
   create: (application, signal) => api.create(application, signal),
   applicationURL
 };

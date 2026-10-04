@@ -59,8 +59,10 @@ export class ArgoClient {
       throw error;
     } finally { window.clearTimeout(timeout); signal.removeEventListener('abort', abort); }
   }
-  async get(name: string, namespace: string, signal: AbortSignal): Promise<RolloutsApplication | null> {
-    try { return await this.request(`applications/${encodeURIComponent(name)}?appNamespace=${encodeURIComponent(namespace)}`, signal); }
+  async get(name: string, namespace: string, signal: AbortSignal, project: string): Promise<RolloutsApplication | null> {
+    if (!project) throw new Error('Informe o projeto para consultar a Application.');
+    // Without a project, Argo CD obscures missing applications with HTTP 403, even for admin.
+    try { return await this.request(`applications/${encodeURIComponent(name)}?appNamespace=${encodeURIComponent(namespace)}&projects=${encodeURIComponent(project)}`, signal); }
     catch (error) { if (error instanceof ApiError && error.status === 404) return null; throw error; }
   }
   create(application: RolloutsApplication, signal: AbortSignal) {
