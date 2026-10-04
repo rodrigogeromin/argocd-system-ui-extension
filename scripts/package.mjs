@@ -1,0 +1,13 @@
+import {readFile, mkdir, readdir} from 'node:fs/promises';
+import {execFileSync} from 'node:child_process';
+import assert from 'node:assert/strict';
+execFileSync(process.execPath, ['scripts/inspect.mjs'], {stdio: 'inherit'});
+const p = JSON.parse(await readFile('extension-project.json', 'utf8'));
+assert(/^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/.test(p.name));
+const file = `extension-${p.name}.js`;
+assert.deepEqual(await readdir('dist/resources'), [file]);
+await mkdir('dist', {recursive: true});
+const archive = `dist/${p.name}.tar.gz`;
+execFileSync('tar', ['--sort=name', '--mtime=@0', '--owner=0', '--group=0', '--numeric-owner', '-czf', archive, '-C', 'dist', `resources/${file}`]);
+assert.equal(execFileSync('tar', ['-tzf', archive], {encoding:'utf8'}).trim(), `resources/${file}`);
+console.log(`Package allowlist passed: ${archive}`);

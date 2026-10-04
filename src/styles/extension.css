@@ -1,0 +1,37 @@
+#argocd-ext-argo-rollouts-installer { --rollouts-accent: #0b827e; --rollouts-border: #82949c55; padding: clamp(18px, 3vw, 40px); max-width: 1360px; margin: auto; color: inherit; font: inherit; }
+#argocd-ext-argo-rollouts-installer * { box-sizing: border-box; }
+#argocd-ext-argo-rollouts-installer h1 { font-size: clamp(26px, 3vw, 38px); margin: 12px 0; font-weight: 600; color: inherit; }
+#argocd-ext-argo-rollouts-installer h2 { margin: 0 0 14px; font-size: 21px; color: inherit; }
+#argocd-ext-argo-rollouts-installer p { line-height: 1.6; }
+#argocd-ext-argo-rollouts-installer .rollouts-eyebrow { font-size: 11px; letter-spacing: 2px; font-weight: 700; color: var(--rollouts-accent); }
+#argocd-ext-argo-rollouts-installer .rollouts-steps { display: flex; flex-wrap: wrap; gap: 18px; padding: 20px 0; list-style: none; }
+#argocd-ext-argo-rollouts-installer .rollouts-steps li { display: flex; align-items: center; gap: 9px; opacity: .65; }
+#argocd-ext-argo-rollouts-installer .rollouts-steps li.is-active { opacity: 1; font-weight: 600; }
+#argocd-ext-argo-rollouts-installer .rollouts-steps span { border: 1px solid var(--rollouts-border); border-radius: 50%; width: 30px; height: 30px; display: grid; place-items: center; }
+#argocd-ext-argo-rollouts-installer .is-active span { background: var(--rollouts-accent); color: white; }
+#argocd-ext-argo-rollouts-installer .rollouts-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 22px; }
+#argocd-ext-argo-rollouts-installer .rollouts-card { min-width: 0; border: 1px solid var(--rollouts-border); border-radius: 12px; padding: 26px; background: #82949c08; }
+#argocd-ext-argo-rollouts-installer fieldset { border: 0; padding: 0; margin: 20px 0; min-width: 0; }
+#argocd-ext-argo-rollouts-installer .rollouts-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+#argocd-ext-argo-rollouts-installer label { display: block; font-size: 13px; font-weight: 600; }
+#argocd-ext-argo-rollouts-installer input:not([type=checkbox]) { width: 100%; padding: 11px 12px; margin-top: 7px; border: 1px solid var(--rollouts-border); border-radius: 6px; background: transparent; color: inherit; font: inherit; }
+#argocd-ext-argo-rollouts-installer input:disabled { opacity: .7; }
+#argocd-ext-argo-rollouts-installer small { display: block; margin-top: 6px; opacity: .8; font-weight: 400; }
+#argocd-ext-argo-rollouts-installer .rollouts-wide { grid-column: 1 / -1; }
+#argocd-ext-argo-rollouts-installer .rollouts-checkbox { display: flex; align-items: center; gap: 10px; margin-top: 20px; }
+#argocd-ext-argo-rollouts-installer .rollouts-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+#argocd-ext-argo-rollouts-installer button { cursor: pointer; border: 1px solid var(--rollouts-border); border-radius: 6px; padding: 12px 16px; color: inherit; background: transparent; font: inherit; font-weight: 600; }
+#argocd-ext-argo-rollouts-installer button.rollouts-primary { background: var(--rollouts-accent); color: white; }
+#argocd-ext-argo-rollouts-installer button:disabled { cursor: default; opacity: .55; }
+#argocd-ext-argo-rollouts-installer :is(button, input, a, summary):focus-visible { outline: 3px solid #f3ad56; outline-offset: 3px; }
+#argocd-ext-argo-rollouts-installer .rollouts-note { font-size: 12px; opacity: .85; }
+#argocd-ext-argo-rollouts-installer .rollouts-error { color: #d45454; overflow-wrap: anywhere; }
+#argocd-ext-argo-rollouts-installer dl { display: grid; grid-template-columns: 110px 1fr; gap: 10px; font-size: 13px; }
+#argocd-ext-argo-rollouts-installer dd { margin: 0; overflow-wrap: anywhere; font-weight: 600; }
+#argocd-ext-argo-rollouts-installer details { margin-top: 24px; }
+#argocd-ext-argo-rollouts-installer summary { cursor: pointer; font-weight: 600; }
+#argocd-ext-argo-rollouts-installer pre { margin-top: 14px; padding: 14px; background: #82949c15; color: inherit; max-height: 350px; overflow: auto; font-size: 11px; }
+#argocd-ext-argo-rollouts-installer .rollouts-link { display: inline-block; margin-top: 12px; color: var(--rollouts-accent); font-weight: 600; }
+#argocd-ext-argo-rollouts-installer .rollouts-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+@media (max-width: 850px) { #argocd-ext-argo-rollouts-installer .rollouts-grid { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { #argocd-ext-argo-rollouts-installer .rollouts-fields { grid-template-columns: 1fr; } #argocd-ext-argo-rollouts-installer .rollouts-card { padding: 18px; } }

@@ -1,0 +1,48 @@
+{
+  "name": "argo-rollouts-installer",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": "26.7.0",
+    "npm": "11.19.0"
+  },
+  "packageManager": "npm@11.19.0",
+  "scripts": {
+    "dev": "node scripts/preview.mjs",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src dev",
+    "test": "jest --runInBand --testPathIgnorePatterns=HostBundle",
+    "build": "webpack --mode production && node scripts/inspect.mjs",
+    "package": "node scripts/package.mjs",
+    "validate": "node scripts/validate.mjs",
+    "evidence:check": "node scripts/evidence.mjs",
+    "harness": "jest --runInBand --runTestsByPath dev/HostBundle.test.tsx",
+    "runtime:setup": "node scripts/setup-runtime.mjs"
+  },
+  "dependencies": {
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.4",
+    "@testing-library/dom": "10.4.1",
+    "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/react": "16.3.2",
+    "@types/jest": "30.0.0",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "css-loader": "7.1.4",
+    "eslint": "9.39.4",
+    "globals": "15.15.0",
+    "html-webpack-plugin": "5.6.7",
+    "jest": "30.5.2",
+    "jest-environment-jsdom": "30.5.2",
+    "style-loader": "4.0.0",
+    "ts-jest": "29.4.9",
+    "ts-loader": "9.6.2",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.60.1",
+    "webpack": "5.106.2",
+    "webpack-cli": "5.1.4"
+  }
+}

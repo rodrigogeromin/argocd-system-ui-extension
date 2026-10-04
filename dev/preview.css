@@ -1,0 +1,4 @@
+html, body, #root { height: 100%; margin: 0; font-family: system-ui, sans-serif; }
+#root { background: #f8fafc; color: #1f2937; }
+#root[data-theme="dark"] { background: #171b26; color: #edf2f7; color-scheme: dark; }
+.preview-panel { max-width: 100%; overflow: hidden; }
