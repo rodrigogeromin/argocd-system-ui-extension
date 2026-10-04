@@ -4,8 +4,17 @@ import {installPlan} from '../features/catalog/install';
 import type {AddonConfig, AddonConfigs, AddonState, CatalogServices, TargetConfig} from '../features/catalog/types';
 import type {ExtensionProps} from '../argocd/types';
 import '../styles/extension.css';
+import {AddonDetail} from '../features/catalog/AddonDetail';
+function currentAddon() {const id = new URLSearchParams(window.location.search).get('addon'); return addons.some(addon => addon.id === id) ? id : null;}
+function addonURL(id: string | null) {const url = new URL(window.location.href); if (id) url.searchParams.set('addon', id); else url.searchParams.delete('addon'); return url.pathname + url.search + url.hash;}
 const phaseLabels = {absent: 'Não instalado', checking: 'Consultando', queued: 'Na fila', syncing: 'Sincronizando', ready: 'Instalado', error: 'Erro'};
 export function Extension({client}: ExtensionProps & {client: CatalogServices}) {
+  const [detailId, setDetailId] = useState<string | null>(currentAddon);
+  const detail = detailId ? getAddon(detailId) : undefined;
+  const heading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {const pop = () => {setDetailId(currentAddon()); setReview(false);}; window.addEventListener('popstate', pop); return () => window.removeEventListener('popstate', pop);}, []);
+  useEffect(() => {heading.current?.focus();}, [detailId]);
+  function openAddon(id: string | null) {window.history.pushState({}, '', addonURL(id)); setDetailId(id); setReview(false);}
   const [target, setTarget] = useState<TargetConfig>({...targetDefaults});
   const [configs, setConfigs] = useState<AddonConfigs>(defaultConfigs);
   const [selected, setSelected] = useState<string[]>([]);
@@ -24,15 +33,15 @@ export function Extension({client}: ExtensionProps & {client: CatalogServices}) 
   function changeTarget<K extends keyof TargetConfig>(key: K, value: TargetConfig[K]) {request.current?.abort(); setTarget(previous => ({...previous, [key]: value})); setStates({}); setError(''); setReview(false);}
   function changeConfig<K extends keyof AddonConfig>(id: string, key: K, value: AddonConfig[K]) {request.current?.abort(); setConfigs(previous => ({...previous, [id]: {...previous[id], [key]: value}})); setStates(previous => {const next = {...previous}; delete next[id]; return next;}); setError('');}
   function toggle(id: string) {setSelected(previous => previous.includes(id) ? previous.filter(item => item !== id) : [...previous, id]); setError(''); setReview(false);}
-  async function discover() {
+  async function discover(id?: string) {
     if (active.current || validateTarget(target)) return;
     active.current = true; request.current?.abort(); const controller = new AbortController(); request.current = controller; setBusy(true); setError('');
-    const snapshot = configs;
+    const snapshot = configs; const items = id ? [getAddon(id)] : addons;
     try {
       // Read in small batches, preserving an individual result/error for every card.
-      for (let index = 0; index < addons.length; index += 4) {
+      for (let index = 0; index < items.length; index += 4) {
         if (controller.signal.aborted) return;
-        await Promise.all(addons.slice(index, index + 4).map(async addon => {
+        await Promise.all(items.slice(index, index + 4).map(async addon => {
           try {
             const app = await client.get(snapshot[addon.id].name, target.applicationNamespace, controller.signal, target.project);
             if (controller.signal.aborted) return;
@@ -55,9 +64,9 @@ export function Extension({client}: ExtensionProps & {client: CatalogServices}) 
       else {setError(failure instanceof Error ? failure.message : 'Falha na instalação.'); setNotice('Execução interrompida. Revise o erro e retome; Applications existentes serão preservadas.');}
     } finally {active.current = false; setBusy(false);}
   }
-  return <section id="argocd-ext-argo-rollouts-installer" aria-label="Catálogo de addons">
-    <header className="rollouts-header"><span className="rollouts-eyebrow">PLATAFORMA · ADDONS KUBERNETES</span><h1>Catálogo de Addons</h1><p>Escolha, configure e instale os componentes da sua plataforma com Applications gerenciadas pelo Argo CD.</p></header>
-    <div className="catalog-toolbar"><label>Buscar addon<input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Istio, políticas, observabilidade…" /></label><label>Categoria<select value={category} onChange={event => setCategory(event.target.value)}>{categories.map(item => <option key={item}>{item}</option>)}</select></label><button disabled={busy || !!validateTarget(target)} onClick={() => {void discover();}}>Atualizar status</button></div>
+  return <section id="argocd-ext-argo-rollouts-installer" aria-label="Addons">
+    <header className="rollouts-header"><span className="rollouts-eyebrow">PLATAFORMA · ADDONS KUBERNETES</span><nav aria-label="Navegação de addons">{detail ? <><a className="rollouts-link" href={addonURL(null)} onClick={event => {event.preventDefault(); openAddon(null);}}>Addons</a><span> / {detail.title}</span></> : null}</nav><h1 ref={heading} tabIndex={-1}>{detail?.title ?? 'Addons'}</h1><p>{detail?.description ?? 'Escolha, configure e instale os componentes da sua plataforma com Applications gerenciadas pelo Argo CD.'}</p></header>
+    {!detail && <div className="catalog-toolbar"><label>Buscar addon<input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Istio, políticas, observabilidade…" /></label><label>Categoria<select value={category} onChange={event => setCategory(event.target.value)}>{categories.map(item => <option key={item}>{item}</option>)}</select></label><button disabled={busy || !!validateTarget(target)} onClick={() => {void discover();}}>Atualizar status</button></div>}
     <details className="rollouts-card catalog-target"><summary>Destino da instalação · {target.project} · {target.applicationNamespace}</summary><fieldset disabled={busy}><div className="rollouts-fields">
       <label>Projeto Argo CD<input value={target.project} onChange={event => changeTarget('project', event.target.value)} /></label>
       <label>Namespace das Applications<input value={target.applicationNamespace} onChange={event => changeTarget('applicationNamespace', event.target.value)} /></label>
@@ -65,20 +74,20 @@ export function Extension({client}: ExtensionProps & {client: CatalogServices}) 
       <label>Plataforma para Istio<select value={target.platform} onChange={event => changeTarget('platform', event.target.value)}>{['k3d', 'k3s', 'default', 'gke', 'eks', 'openshift', 'minikube'].map(item => <option key={item}>{item}</option>)}</select></label>
       <label>URL do Prometheus (opcional)<input value={target.prometheusURL} onChange={event => changeTarget('prometheusURL', event.target.value)} placeholder="Automática a partir do addon Prometheus" /><small>Para Grafana e Kiali. Informe aqui se já usa um Prometheus externo ou com outro nome.</small></label>
     </div></fieldset></details>
-    <div className="catalog-presets"><span>Seleções prontas</span>{presets.map(preset => <button key={preset.title} disabled={busy} onClick={() => {setSelected(preset.ids); setReview(false); setError('');}}>{preset.title}</button>)}</div>
+    {!detail && <div className="catalog-presets"><span>Seleções prontas</span>{presets.map(preset => <button key={preset.title} disabled={busy} onClick={() => {setSelected(preset.ids); setReview(false); setError('');}}>{preset.title}</button>)}</div>}
     <p role="status" aria-live="polite">{notice}</p>{error && <p role="alert" className="rollouts-error">{error}</p>}{invalid && <p role="alert" className="rollouts-error">{invalid}</p>}
-    <div className="catalog-cards">{filtered.map(addon => {
+    {detail ? <><AddonDetail key={detail.id} addon={detail} configs={configs} target={target} state={states[detail.id]} busy={busy} client={client} change={(key, value) => changeConfig(detail.id, key, value)} open={openAddon} refresh={() => {void discover(detail.id);}}/><label className="rollouts-checkbox"><input type="checkbox" checked={included.has(detail.id)} disabled={busy || (included.has(detail.id) && !selected.includes(detail.id))} onChange={() => toggle(detail.id)}/>{included.has(detail.id) && !selected.includes(detail.id) ? `${detail.title} incluído como dependência` : `Selecionar ${detail.title}`}</label></> : <><div className="catalog-cards">{filtered.map(addon => {
       const state = states[addon.id]; const automatic = included.has(addon.id) && !selected.includes(addon.id);
-      return <article className={`rollouts-card catalog-addon ${included.has(addon.id) ? 'is-selected' : ''}`} key={addon.id}>
+      return <article className={`rollouts-card catalog-addon ${included.has(addon.id) ? 'is-selected' : ''}`} key={addon.id} onClick={event => {if (!(event.target as HTMLElement).closest('a, input, button, label')) openAddon(addon.id);}}>
         <div className="catalog-card-heading"><i className={`fa ${addon.icon}`} aria-hidden="true"/><span className="catalog-category">{addon.category}</span><span className={`catalog-badge phase-${state?.phase ?? 'unknown'}`}>{state ? phaseLabels[state.phase] : 'Status não consultado'}</span></div>
-        <h2>{addon.title}</h2><p>{addon.description}</p><p className="rollouts-note">Chart {addon.chart} · {addon.version} · {addon.appVersion}</p>
+        <a className="addon-card-link" href={addonURL(addon.id)} onClick={event => {event.preventDefault(); openAddon(addon.id);}} aria-label={`Ver detalhes de ${addon.title}`}><h2>{addon.title}</h2><p>{addon.description}</p><p className="rollouts-note">Chart {addon.chart} · {configs[addon.id].version} · {addon.appVersion}</p></a>
         <label className="rollouts-checkbox"><input type="checkbox" checked={included.has(addon.id)} disabled={busy || automatic} onChange={() => toggle(addon.id)} />{automatic ? `${addon.title} incluído como dependência` : `Selecionar ${addon.title}`}</label>
         {addon.dependencies.length > 0 && <p className="rollouts-note">Requer: {addon.dependencies.map(id => getAddon(id).title).join(', ')}.</p>}
         {state?.app && <><p className="rollouts-note">Application {state.app.metadata.name} · versão em uso {state.app.spec.source?.targetRevision} · {state.app.status?.sync?.status ?? 'Aguardando'} / {state.app.status?.health?.status ?? 'Aguardando'}</p><a className="rollouts-link" href={client.applicationURL(state.app.metadata.name, state.app.metadata.namespace ?? target.applicationNamespace)}>Abrir Application de {addon.title} →</a></>}
         {state?.message && <p className={state.phase === 'error' ? 'rollouts-error' : 'rollouts-note'}>{state.message}</p>}
-        <details><summary>Requisitos e configuração</summary><p className="rollouts-note">{addon.notes}</p><fieldset disabled={busy}><label>Nome da Application de {addon.title}<input value={configs[addon.id].name} onChange={event => changeConfig(addon.id, 'name', event.target.value)} /></label><label>Namespace de {addon.title}<input value={configs[addon.id].namespace} onChange={event => changeConfig(addon.id, 'namespace', event.target.value)} /></label><label>Versão de {addon.title}<input value={configs[addon.id].version} onChange={event => changeConfig(addon.id, 'version', event.target.value)} /></label><label>Values JSON de {addon.title}<textarea rows={5} value={configs[addon.id].values} onChange={event => changeConfig(addon.id, 'values', event.target.value)} spellCheck={false} /></label></fieldset></details>
+
       </article>;
-    })}</div>{filtered.length === 0 && <p>Nenhum addon corresponde à busca.</p>}
+    })}</div>{filtered.length === 0 && <p>Nenhum addon corresponde à busca.</p>}</>}
     <div className="catalog-selection rollouts-card"><div><h2>{plan.length} addon{plan.length === 1 ? '' : 's'} na seleção</h2><p>{plan.length ? plan.map(addon => addon.title).join(' → ') : 'Selecione um addon ou use uma seleção pronta.'}</p><p className="rollouts-note">Dependências são incluídas automaticamente e aguardam saúde antes de liberar os próximos componentes. Uma Application existente é preservada; o catálogo não realiza upgrades.</p></div><div className="rollouts-actions"><button disabled={busy || !selected.length} onClick={() => {setSelected([]); setReview(false);}}>Limpar seleção</button><button className="rollouts-primary" disabled={busy || !plan.length || !!invalid} onClick={() => setReview(true)}>Revisar instalação</button>{busy && <button onClick={() => request.current?.abort()}>Parar acompanhamento</button>}</div></div>
     {review && plan.length > 0 && <section className="rollouts-card catalog-review" aria-label="Revisão da instalação"><h2>Revise as Applications</h2><p>Serão criadas somente as Applications ausentes no projeto selecionado. Sincronização automática e self-heal ficam habilitados, prune desabilitado. Os addons podem criar CRDs, webhooks e permissões de cluster.</p>
       {plan.map(addon => <details key={addon.id}><summary>{addon.title} · {configs[addon.id].name} · {configs[addon.id].namespace} · {configs[addon.id].version}</summary><pre>{JSON.stringify(invalid ? {erro: invalid} : buildAddonApplication(addon, configs[addon.id], target, configs, plan), null, 2)}</pre></details>)}

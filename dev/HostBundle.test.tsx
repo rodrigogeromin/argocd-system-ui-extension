@@ -56,11 +56,11 @@ test('production bundle registers and renders against simulated host globals', (
   if(callbackIndex>=0){const callback=register.mock.calls[0][callbackIndex] as unknown as (application?:typeof validContext.application)=>boolean;expect(callback(validContext.application)).toBe(registration.shouldDisplay??true);expect(callback(undefined)).toBe(registration.shouldDisplay??true);}
   if(project.profile==='top-bar-action')expect(screen.getByText(registration.title!)).toBeInTheDocument();
   else if(contract.props.includes('application'))expect(screen.getByText('Healthy')).toBeInTheDocument();
-  else expect(screen.getByRole('heading',{name:'Catálogo de Addons'})).toBeInTheDocument();
+  else expect(screen.getByRole('heading',{name:'Addons'})).toBeInTheDocument();
   cleanup();
   render(<Component />);
   if(project.profile==='top-bar-action')expect(screen.getByText(registration.title!)).toBeInTheDocument();
-  else expect(screen.getByRole('heading',{name:'Catálogo de Addons'})).toBeInTheDocument();
+  else expect(screen.getByRole('heading',{name:'Addons'})).toBeInTheDocument();
   expect(globals.React).toBe(React);
   expect(globals.ReactDOM).toBe(ReactDOM);
   if(contract.globals.includes('ReactJSXRuntime'))expect(globals.ReactJSXRuntime).toBe(jsxRuntime);
@@ -97,7 +97,7 @@ test('System Level registration waits for React 19 host mount and appears after 
     root.render(<Host />);
     (0, eval)(readFileSync(`dist/resources/extension-${project.name}.js`, 'utf8'));
   });
-  expect(screen.getAllByRole('link').map(link => link.textContent)).toEqual(['Documentation', 'Catálogo de Addons']);
+  expect(screen.getAllByRole('link').map(link => link.textContent)).toEqual(['Documentation', 'Addons']);
   expect(register).toHaveBeenCalledTimes(1);
   await act(async () => root.unmount()); container.remove(); delete window.extensionsAPI;
 });

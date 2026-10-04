@@ -7,15 +7,15 @@ import {ArgoClient} from '../src/argocd/api';
 import {buildApplication, defaults} from '../src/features/rollouts/application';
 import {validContext} from './fixtures/context';
 import type {ExtensionsAPI} from '../src/argocd/types';
-afterEach(() => jest.restoreAllMocks());
+afterEach(() => {jest.restoreAllMocks(); window.history.replaceState({}, '', '/');});
 test('renders catalogue with absent context and preserves immutable host context', () => {
   const before = JSON.stringify(validContext); render(<Extension {...validContext}/>);
-  expect(screen.getByRole('heading', {name: 'Catálogo de Addons'})).toBeInTheDocument(); expect(JSON.stringify(validContext)).toBe(before);
+  expect(screen.getByRole('heading', {name: 'Addons'})).toBeInTheDocument(); expect(JSON.stringify(validContext)).toBe(before);
   expect(screen.getByRole('button', {name: 'Revisar instalação'})).toBeDisabled();
 });
 test('registers the same System Level page with the new menu title', () => {
   const fn = jest.fn(); window.extensionsAPI = {registerSystemLevelExtension: fn} as unknown as ExtensionsAPI;
-  register(Extension); expect(fn).toHaveBeenCalledWith(Extension, 'Catálogo de Addons', '/argo-rollouts', 'fa-cubes');
+  register(Extension); expect(fn).toHaveBeenCalledWith(Extension, 'Addons', '/argo-rollouts', 'fa-cubes');
   delete window.extensionsAPI; expect(() => register(Extension)).toThrow('extensionsAPI');
 });
 test('supports search and category filters with an empty state', () => {
@@ -49,10 +49,34 @@ test('discovery finds existing Rollouts without creating anything', async () => 
 });
 test('invalid JSON and conflicting Istio versions disable submission', () => {
   render(<Extension/>); fireEvent.click(screen.getByRole('checkbox', {name: 'Selecionar Kyverno'}));
+  fireEvent.click(screen.getByRole('link', {name: 'Ver detalhes de Kyverno'})); fireEvent.click(screen.getByRole('tab', {name: 'Parâmetros'}));
   fireEvent.change(screen.getByLabelText('Values JSON de Kyverno'), {target: {value: 'invalid'}}); expect(screen.getByRole('button', {name: 'Revisar instalação'})).toBeDisabled();
 });
 test('403 preflight error is displayed and never attempts POST', async () => {
   jest.spyOn(ArgoClient.prototype, 'get').mockRejectedValue(new Error('permission denied')); const create = jest.spyOn(ArgoClient.prototype, 'create');
   render(<Extension/>); fireEvent.click(screen.getByRole('checkbox', {name: 'Selecionar External Secrets'})); fireEvent.click(screen.getByRole('button', {name: 'Revisar instalação'})); fireEvent.click(screen.getByRole('button', {name: 'Instalar selecionados'}));
   await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('permission denied')); expect(create).not.toHaveBeenCalled();
+});
+
+test('opens detail tabs, keeps custom values when returning, and reviews the edited manifest', () => {
+  const create = jest.spyOn(ArgoClient.prototype, 'create'); render(<Extension/>);
+  fireEvent.click(screen.getByRole('link', {name: 'Ver detalhes de Kyverno'}));
+  expect(window.location.search).toBe('?addon=kyverno'); expect(screen.queryByLabelText('Buscar addon')).not.toBeInTheDocument();
+  expect(screen.getByRole('heading', {level: 1, name: 'Kyverno'})).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('tab', {name: 'Parâmetros'}));
+  fireEvent.change(screen.getByLabelText('Namespace de Kyverno'), {target: {value: 'policies'}});
+  fireEvent.change(screen.getByLabelText('Helm · admissionController.replicas'), {target: {value: '3'}});
+  fireEvent.click(screen.getByRole('tab', {name: 'Manifesto'})); expect(screen.getByRole('tabpanel')).toHaveTextContent('policies'); expect(screen.getByRole('tabpanel')).toHaveTextContent('"replicas": 3');
+  fireEvent.click(screen.getByRole('checkbox', {name: 'Selecionar Kyverno'}));
+  fireEvent.click(screen.getByRole('link', {name: 'Addons'}));
+  expect(screen.getByRole('checkbox', {name: 'Selecionar Kyverno'})).toBeChecked();
+  fireEvent.click(screen.getByRole('link', {name: 'Ver detalhes de Kyverno'})); fireEvent.click(screen.getByRole('tab', {name: 'Parâmetros'}));
+  expect(screen.getByLabelText('Namespace de Kyverno')).toHaveValue('policies'); expect(create).not.toHaveBeenCalled();
+});
+test('supports detail deep links and browser history without creating applications', () => {
+  window.history.replaceState({}, '', '/argo-rollouts?addon=istio-ztunnel'); render(<Extension/>);
+  expect(screen.getByRole('heading', {level: 1, name: 'Istio Ztunnel'})).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', {name: 'Istio Base'})); expect(window.location.search).toContain('addon=istio-base');
+  window.history.replaceState({}, '', '/argo-rollouts'); fireEvent.popState(window);
+  expect(screen.getByLabelText('Buscar addon')).toBeInTheDocument();
 });
