@@ -4,7 +4,7 @@ Extension React/TypeScript para **Argo CD 3.5.1**, registrada como **Addons** ab
 
 ## Jornada
 
-1. Abra um card para acessar o detalhe do addon, como nas Applications: **Resumo**, **Parâmetros** e **Manifesto**. Edite nome, namespace, versão e parâmetros Helm; o editor JSON permite overrides avançados. Breadcrumb, links diretos (`?addon=kyverno`) e voltar/avançar do navegador mantêm a navegação. Alterações e seleção permanecem ao voltar à lista durante a sessão.
+1. Abra um card para acessar o detalhe do addon, como nas Applications: **Resumo**, **Parâmetros** e **Manifesto**. Edite nome, namespace, versão e parâmetros Helm; o editor JSON permite overrides avançados. **Voltar para Addons**, breadcrumb e links diretos (`?addon=kyverno`) e voltar/avançar do navegador mantêm a navegação. Alterações e seleção permanecem ao voltar à lista durante a sessão.
 2. Selecione addons individuais ou os presets **Observabilidade**, **Istio Sidecar + observabilidade** e **Istio Ambient + observabilidade**. Dependências são selecionadas automaticamente.
 3. Configure projeto, namespace das Applications, cluster e plataforma. O padrão `k3d` corresponde à instalação atual; ajuste para outros clusters. Cada addon permite nome, namespace, versão exata e overrides Helm em JSON.
 4. Clique **Revisar instalação** e confira os manifestos. Somente **Instalar selecionados** cria Applications pela API, com `validate=true&upsert=false`, autosync, selfHeal e sem prune.
@@ -59,9 +59,9 @@ O gerador e o contrato estão registrados em `extension-project.json`; a auditor
 
 ```sh
 # Depois de atualizar a versão também no package-lock.json e commitar:
-git tag v0.2.1
+git tag v0.2.2
 git push origin develop
-git push origin v0.2.1
+git push origin v0.2.2
 ```
 
 Assets publicados:
@@ -73,7 +73,7 @@ Assets publicados:
 
 O workflow usa `GITHUB_TOKEN` com `contents: write`, sem PAT adicional. As URLs fornecidas pressupõem repositório público. Para releases privadas, use os endpoints de assets da API do GitHub e o mecanismo de headers montados de Secret do installer.
 
-A release **v0.2.1** adiciona a navegação lista/detalhe e parâmetros Helm editáveis, usando **Addons** no menu, e preserva as correções de registro React 19 e consulta por projeto. Veja [evidências de implantação e limites](docs/integration.md). A seleção de addons só instala controllers após o botão de confirmação.
+A release **v0.2.2** adiciona a navegação lista/detalhe e parâmetros Helm editáveis, usando **Addons** no menu, e preserva as correções de registro React 19 e consulta por projeto. Veja [evidências de implantação e limites](docs/integration.md). A seleção de addons só instala controllers após o botão de confirmação.
 
 ## Instalar com argocd-extension-installer v1.1.0
 

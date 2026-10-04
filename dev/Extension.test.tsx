@@ -68,7 +68,7 @@ test('opens detail tabs, keeps custom values when returning, and reviews the edi
   fireEvent.change(screen.getByLabelText('Helm · admissionController.replicas'), {target: {value: '3'}});
   fireEvent.click(screen.getByRole('tab', {name: 'Manifesto'})); expect(screen.getByRole('tabpanel')).toHaveTextContent('policies'); expect(screen.getByRole('tabpanel')).toHaveTextContent('"replicas": 3');
   fireEvent.click(screen.getByRole('checkbox', {name: 'Selecionar Kyverno'}));
-  fireEvent.click(screen.getByRole('link', {name: 'Addons'}));
+  fireEvent.click(screen.getByRole('button', {name: 'Voltar para Addons'}));
   expect(screen.getByRole('checkbox', {name: 'Selecionar Kyverno'})).toBeChecked();
   fireEvent.click(screen.getByRole('link', {name: 'Ver detalhes de Kyverno'})); fireEvent.click(screen.getByRole('tab', {name: 'Parâmetros'}));
   expect(screen.getByLabelText('Namespace de Kyverno')).toHaveValue('policies'); expect(create).not.toHaveBeenCalled();
