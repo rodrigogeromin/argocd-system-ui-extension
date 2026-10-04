@@ -23,20 +23,36 @@ export function Extension({client}: ExtensionProps & {client: CatalogServices}) 
   const [review, setReview] = useState(false); const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState('Escolha os addons para compor sua plataforma.'); const [error, setError] = useState('');
   const request = useRef<AbortController | null>(null); const active = useRef(false);
-  useEffect(() => () => request.current?.abort(), []);
+  const discoveryRequest = useRef<AbortController | null>(null);
+  const [discovering, setDiscovering] = useState(false);
+  useEffect(() => () => {request.current?.abort(); discoveryRequest.current?.abort();}, []);
+  const discoveryScope = JSON.stringify([target.project, target.applicationNamespace, target.server, addons.map(addon => [configs[addon.id].name, configs[addon.id].namespace])]);
+  useEffect(() => {void discover(); return () => discoveryRequest.current?.abort();}, [discoveryScope]);
   const plan = useMemo(() => resolvePlan(selected), [selected]);
   const included = new Set(plan.map(addon => addon.id));
   const invalid = validatePlan(plan, configs, target);
   const filtered = addons.filter(addon => (category === 'Todos' || addon.category === category) && `${addon.title} ${addon.description}`.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
   const categories = ['Todos', ...new Set(addons.map(addon => addon.category))];
   function update(id: string, state: AddonState) {setStates(previous => ({...previous, [id]: state}));}
-  function changeTarget<K extends keyof TargetConfig>(key: K, value: TargetConfig[K]) {request.current?.abort(); setTarget(previous => ({...previous, [key]: value})); setStates({}); setError(''); setReview(false);}
-  function changeConfig<K extends keyof AddonConfig>(id: string, key: K, value: AddonConfig[K]) {request.current?.abort(); setConfigs(previous => ({...previous, [id]: {...previous[id], [key]: value}})); setStates(previous => {const next = {...previous}; delete next[id]; return next;}); setError('');}
+  function changeTarget<K extends keyof TargetConfig>(key: K, value: TargetConfig[K]) {
+    request.current?.abort();
+    if (['project', 'applicationNamespace', 'server'].includes(key)) {discoveryRequest.current?.abort(); setStates({});}
+    setTarget(previous => ({...previous, [key]: value})); setError(''); setReview(false);
+  }
+  function changeConfig<K extends keyof AddonConfig>(id: string, key: K, value: AddonConfig[K]) {
+    request.current?.abort();
+    if (['name', 'namespace'].includes(key)) {
+      discoveryRequest.current?.abort();
+      setStates(previous => {const next = {...previous}; delete next[id]; return next;});
+    }
+    setConfigs(previous => ({...previous, [id]: {...previous[id], [key]: value}})); setError('');
+  }
   function toggle(id: string) {setSelected(previous => previous.includes(id) ? previous.filter(item => item !== id) : [...previous, id]); setError(''); setReview(false);}
   async function discover(id?: string) {
     if (active.current || validateTarget(target)) return;
-    active.current = true; request.current?.abort(); const controller = new AbortController(); request.current = controller; setBusy(true); setError('');
+    discoveryRequest.current?.abort(); const controller = new AbortController(); discoveryRequest.current = controller; setDiscovering(true);
     const snapshot = configs; const items = id ? [getAddon(id)] : addons;
+    items.forEach(addon => update(addon.id, {phase: 'checking'}));
     try {
       // Read in small batches, preserving an individual result/error for every card.
       for (let index = 0; index < items.length; index += 4) {
@@ -50,11 +66,13 @@ export function Extension({client}: ExtensionProps & {client: CatalogServices}) 
         }));
       }
       if (!controller.signal.aborted) setNotice('Status atualizado. Consulte cada card para ver Applications existentes ou erros.');
-    } finally {active.current = false; setBusy(false);}
+    } finally {if (discoveryRequest.current === controller) setDiscovering(false);}
   }
   async function install() {
     if (active.current || invalid || plan.length === 0) return;
     active.current = true; request.current?.abort(); const controller = new AbortController(); request.current = controller; setBusy(true); setError('');
+    discoveryRequest.current?.abort(); setDiscovering(false);
+    setStates(previous => Object.fromEntries(Object.entries(previous).filter(([, state]) => state.phase !== 'checking')));
     setNotice('Verificando a seleção e instalando em ordem de dependências…');
     try {
       await installPlan({plan, configs, target, client, signal: controller.signal, update});
@@ -67,7 +85,7 @@ export function Extension({client}: ExtensionProps & {client: CatalogServices}) 
   return <section id="argocd-ext-argo-rollouts-installer" aria-label="Addons">
     {detail && <button className="addon-back" onClick={() => openAddon(null)}><i className="fa fa-arrow-left" aria-hidden="true"/> Voltar para Addons</button>}
     <header className="rollouts-header"><span className="rollouts-eyebrow">PLATAFORMA · ADDONS KUBERNETES</span><nav aria-label="Navegação de addons">{detail ? <><a className="rollouts-link" href={addonURL(null)} onClick={event => {event.preventDefault(); openAddon(null);}}>Addons</a><span> / {detail.title}</span></> : null}</nav><h1 ref={heading} tabIndex={-1}>{detail?.title ?? 'Addons'}</h1><p>{detail?.description ?? 'Escolha, configure e instale os componentes da sua plataforma com Applications gerenciadas pelo Argo CD.'}</p></header>
-    {!detail && <div className="catalog-toolbar"><label>Buscar addon<input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Istio, políticas, observabilidade…" /></label><label>Categoria<select value={category} onChange={event => setCategory(event.target.value)}>{categories.map(item => <option key={item}>{item}</option>)}</select></label><button disabled={busy || !!validateTarget(target)} onClick={() => {void discover();}}>Atualizar status</button></div>}
+    {!detail && <div className="catalog-toolbar"><label>Buscar addon<input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Istio, políticas, observabilidade…" /></label><label>Categoria<select value={category} onChange={event => setCategory(event.target.value)}>{categories.map(item => <option key={item}>{item}</option>)}</select></label><button disabled={busy || discovering || !!validateTarget(target)} onClick={() => {void discover();}}>Atualizar status</button></div>}
     <details className="rollouts-card catalog-target"><summary>Destino da instalação · {target.project} · {target.applicationNamespace}</summary><fieldset disabled={busy}><div className="rollouts-fields">
       <label>Projeto Argo CD<input value={target.project} onChange={event => changeTarget('project', event.target.value)} /></label>
       <label>Namespace das Applications<input value={target.applicationNamespace} onChange={event => changeTarget('applicationNamespace', event.target.value)} /></label>
@@ -76,7 +94,7 @@ export function Extension({client}: ExtensionProps & {client: CatalogServices}) 
       <label>URL do Prometheus (opcional)<input value={target.prometheusURL} onChange={event => changeTarget('prometheusURL', event.target.value)} placeholder="Automática a partir do addon Prometheus" /><small>Para Grafana e Kiali. Informe aqui se já usa um Prometheus externo ou com outro nome.</small></label>
     </div></fieldset></details>
     {!detail && <div className="catalog-presets"><span>Seleções prontas</span>{presets.map(preset => <button key={preset.title} disabled={busy} onClick={() => {setSelected(preset.ids); setReview(false); setError('');}}>{preset.title}</button>)}</div>}
-    <p role="status" aria-live="polite">{notice}</p>{error && <p role="alert" className="rollouts-error">{error}</p>}{invalid && <p role="alert" className="rollouts-error">{invalid}</p>}
+    <p role="status" aria-live="polite">{discovering ? 'Consultando instalações existentes…' : notice}</p>{error && <p role="alert" className="rollouts-error">{error}</p>}{invalid && <p role="alert" className="rollouts-error">{invalid}</p>}
     {detail ? <><AddonDetail key={detail.id} addon={detail} configs={configs} target={target} state={states[detail.id]} busy={busy} client={client} change={(key, value) => changeConfig(detail.id, key, value)} open={openAddon} refresh={() => {void discover(detail.id);}}/><label className="rollouts-checkbox"><input type="checkbox" checked={included.has(detail.id)} disabled={busy || (included.has(detail.id) && !selected.includes(detail.id))} onChange={() => toggle(detail.id)}/>{included.has(detail.id) && !selected.includes(detail.id) ? `${detail.title} incluído como dependência` : `Selecionar ${detail.title}`}</label></> : <><div className="catalog-cards">{filtered.map(addon => {
       const state = states[addon.id]; const automatic = included.has(addon.id) && !selected.includes(addon.id);
       return <article className={`rollouts-card catalog-addon ${included.has(addon.id) ? 'is-selected' : ''}`} key={addon.id} onClick={event => {if (!(event.target as HTMLElement).closest('a, input, button, label')) openAddon(addon.id);}}>

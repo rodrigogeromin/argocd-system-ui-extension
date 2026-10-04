@@ -22,13 +22,13 @@ Confira os volumes, mounts e init containers. Em instalações gerenciadas por H
 
 ## 2. Instalação rápida — comando de patch
 
-Para o Deployment padrão descrito acima, copie este bloco. Ele baixa o patch oficial da **release v0.2.4**, aplica-o e aguarda o novo pod ficar disponível. Não é necessário clonar o repositório nem compilar a extension.
+Para o Deployment padrão descrito acima, copie este bloco. Ele baixa o patch oficial da **release v0.2.5**, aplica-o e aguarda o novo pod ficar disponível. Não é necessário clonar o repositório nem compilar a extension.
 
 ```sh
 (
   set -eu
   curl --fail --silent --show-error --location --retry 3 \
-    https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/download/v0.2.4/argocd-server-patch.yaml \
+    https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/download/v0.2.5/argocd-server-patch.yaml \
     --output argocd-addons-patch.yaml
 
   kubectl -n argocd patch deployment argocd-server \
@@ -45,7 +45,7 @@ No ambiente deste projeto, acrescente `--context k3d-dev` aos comandos `kubectl`
 ### O que o patch configura
 
 - Init container `argocd-extension-installer-argo-rollouts`, com imagem oficial v1.1.0 fixada por digest.
-- URLs do tar.gz e do checksum fixadas na mesma release v0.2.4; a verificação de checksum permanece habilitada.
+- URLs do tar.gz e do checksum fixadas na mesma release v0.2.5; a verificação de checksum permanece habilitada.
 - Volume compartilhado `tmp` em `/tmp` e destino `/tmp/extensions/resources`.
 - Um único arquivo `extension-argo-rollouts-installer.js`, substituindo a versão anterior sem duplicar o menu.
 
@@ -63,7 +63,7 @@ kubectl -n argocd exec deployment/argocd-server -c argocd-server -- \
 
 O novo pod deve estar Ready. O installer deve registrar `UI extension installed successfully`, após validar o checksum, e o diretório deve conter `extension-argo-rollouts-installer.js`.
 
-Abra o Argo CD e recarregue com **Ctrl+Shift+R**. Clique em **Addons** no menu lateral. Abra um addon para acessar **Resumo**, **Parâmetros** e **Manifesto**; use o botão discreto **Voltar para Addons** para retornar à lista. Selecione addons ou presets, revise as Applications e confirme **Instalar selecionados**.
+Abra o Argo CD e recarregue com **Ctrl+Shift+R**. Clique em **Addons** no menu lateral: os status das Applications são consultados automaticamente, sem precisar clicar em atualizar. Abra um addon para acessar **Resumo**, **Parâmetros** e **Manifesto**; use o botão discreto **Voltar para Addons** para retornar à lista. Selecione addons ou presets, revise as Applications e confirme **Instalar selecionados**.
 
 ## 4. Permissões para instalar os addons
 
@@ -99,4 +99,4 @@ kubectl -n argocd rollout status deployment/argocd-server --timeout=180s
 
 Isso remove somente o init container da extension; mantém o volume e as outras extensions. Como o JS fica em emptyDir, ele desaparece nos novos pods. Os addons e suas Applications continuam instalados. Em Helm/GitOps, faça a mesma remoção na fonte de verdade.
 
-Referências: [release com assets](https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/tag/v0.2.4), [patch do projeto](../deploy/argocd-server-patch.yaml), [installer oficial v1.1.0](https://github.com/argoproj-labs/argocd-extension-installer/tree/v1.1.0), [contrato System Level do Argo CD v3.5.1](https://github.com/argoproj/argo-cd/blob/v3.5.1/ui/src/app/shared/services/extensions-service.ts).
+Referências: [release com assets](https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/tag/v0.2.5), [patch do projeto](../deploy/argocd-server-patch.yaml), [installer oficial v1.1.0](https://github.com/argoproj-labs/argocd-extension-installer/tree/v1.1.0), [contrato System Level do Argo CD v3.5.1](https://github.com/argoproj/argo-cd/blob/v3.5.1/ui/src/app/shared/services/extensions-service.ts).

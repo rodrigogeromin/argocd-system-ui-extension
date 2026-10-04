@@ -9,7 +9,7 @@ Extension React/TypeScript para **Argo CD 3.5.1**, registrada como **Addons** ab
 3. Configure projeto, namespace das Applications, cluster e plataforma. O padrão `k3d` corresponde à instalação atual; ajuste para outros clusters. Cada addon permite nome, namespace, versão exata e overrides Helm em JSON.
 4. Clique **Revisar instalação** e confira os manifestos. Somente **Instalar selecionados** cria Applications pela API, com `validate=true&upsert=false`, autosync, selfHeal e sem prune.
 5. O preflight consulta toda a seleção com `projects=<projeto>` antes de escrever. Erros reais 401/403 e conflitos bloqueiam a criação. Applications existentes compatíveis são preservadas; versões Istio diferentes bloqueiam a composição da pilha. O catálogo não faz upgrades.
-6. Cada dependência precisa estar **Synced + Healthy** antes da criação dos seus dependentes. Acompanhamento a cada cinco segundos, até 15 minutos; **Abrir Application** oferece diagnóstico nativo. **Atualizar status** só consulta.
+6. Cada dependência precisa estar **Synced + Healthy** antes da criação dos seus dependentes. Acompanhamento a cada cinco segundos, até 15 minutos; **Abrir Application** oferece diagnóstico nativo. Os status são consultados automaticamente ao abrir Addons e ao mudar projeto, destino ou nome de Application. **Atualizar status** permite uma nova consulta manual, sem criar recursos.
 
 Interromper o acompanhamento não remove Applications: elas continuam sincronizando no Argo CD. Após falha parcial ou recarga, selecione novamente para retomar. Somente HTTP 404 significa ausência. Cada requisição tem timeout de 20 segundos; o cliente respeita o base href e cancela requisições ao sair da página.
 
@@ -59,9 +59,9 @@ O gerador e o contrato estão registrados em `extension-project.json`; a auditor
 
 ```sh
 # Depois de atualizar a versão também no package-lock.json e commitar:
-git tag v0.2.4
+git tag v0.2.5
 git push origin develop
-git push origin v0.2.4
+git push origin v0.2.5
 ```
 
 Assets publicados:
@@ -74,7 +74,7 @@ Assets publicados:
 
 O workflow usa `GITHUB_TOKEN` com `contents: write`, sem PAT adicional. As URLs fornecidas pressupõem repositório público. Para releases privadas, use os endpoints de assets da API do GitHub e o mecanismo de headers montados de Secret do installer.
 
-A release **v0.2.4** adiciona a navegação lista/detalhe e parâmetros Helm editáveis, usando **Addons** no menu, e preserva as correções de registro React 19 e consulta por projeto. Veja [evidências de implantação e limites](docs/integration.md). A seleção de addons só instala controllers após o botão de confirmação.
+A release **v0.2.5** adiciona a navegação lista/detalhe e parâmetros Helm editáveis, usando **Addons** no menu, e preserva as correções de registro React 19 e consulta por projeto. Veja [evidências de implantação e limites](docs/integration.md). A seleção de addons só instala controllers após o botão de confirmação.
 
 ## Instalar com argocd-extension-installer v1.1.0
 

@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import React from 'react';
 import * as ReactDOM from 'react-dom';
 import {jsxRuntime} from './host-runtime';
-import {render, screen, cleanup,fireEvent} from '@testing-library/react';
+import {render, screen, cleanup,fireEvent,waitFor} from '@testing-library/react';
 import {readFileSync} from 'node:fs';
 import type {ExtensionProps} from '../src/argocd/types';
 import {validContext} from './fixtures/context';
@@ -21,9 +21,15 @@ function expectedArguments(){return (contract.argumentMap as string[]).map(token
   throw new Error(`Unknown host argument: ${token}`);
 });}
 // Executed only after production build by npm run harness. Uses the host's globals.
-test('production bundle registers and renders against simulated host globals', () => {
+test('production bundle registers and renders against simulated host globals', async () => {
   let component: React.ComponentType<ExtensionProps> | undefined;
   const globals = window as unknown as Record<string, unknown>;
+  const previousFetch = globals.fetch;
+  const fetchMock = jest.fn(async (_input: RequestInfo | URL, options: RequestInit) => {
+    void _input; expect(options.method).toBe('GET'); expect(options.credentials).toBe('same-origin');
+    return {ok: false, status: 404, json: async () => ({message: 'not found'})};
+  });
+  globals.fetch = fetchMock;
   globals.React = React;
   globals.ReactDOM = ReactDOM;
   if(contract.globals.includes('ReactJSXRuntime'))globals.ReactJSXRuntime = jsxRuntime;
@@ -57,10 +63,15 @@ test('production bundle registers and renders against simulated host globals', (
   if(project.profile==='top-bar-action')expect(screen.getByText(registration.title!)).toBeInTheDocument();
   else if(contract.props.includes('application'))expect(screen.getByText('Healthy')).toBeInTheDocument();
   else expect(screen.getByRole('heading',{name:'Addons'})).toBeInTheDocument();
+  await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('Status atualizado'));
+  expect(fetchMock).toHaveBeenCalledTimes(12);
   cleanup();
   render(<Component />);
   if(project.profile==='top-bar-action')expect(screen.getByText(registration.title!)).toBeInTheDocument();
   else expect(screen.getByRole('heading',{name:'Addons'})).toBeInTheDocument();
+  await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('Status atualizado'));
+  expect(fetchMock).toHaveBeenCalledTimes(24);
+  globals.fetch = previousFetch;
   expect(globals.React).toBe(React);
   expect(globals.ReactDOM).toBe(ReactDOM);
   if(contract.globals.includes('ReactJSXRuntime'))expect(globals.ReactJSXRuntime).toBe(jsxRuntime);
