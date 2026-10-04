@@ -1,15 +1,15 @@
 {
-  "recordedAt": "2026-10-04T11:51:16.560905+00:00",
+  "recordedAt": "2026-10-04T12:02:56.095039+00:00",
   "target": "3.5.1",
   "sourceTag": "v3.5.1",
   "profile": "system-level",
-  "release": "https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/tag/v0.2.3",
-  "releaseWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37199985497",
-  "ciWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37199984426",
-  "implementationCommit": "aa94988",
+  "release": "https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/tag/v0.2.4",
+  "releaseWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37200590365",
+  "ciWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37200588824",
+  "implementationCommit": "9ae3ca6",
   "context": "k3d-dev",
   "namespace": "argocd",
-  "pod": "argocd-server-8465d8578c-ffmfh",
+  "pod": "argocd-server-b5bc58f6-bx2tj",
   "deployment": {
     "name": "argocd-server",
     "rollout": "passed",
@@ -31,10 +31,10 @@
     ]
   },
   "installerImage": "quay.io/argoprojlabs/argocd-extension-installer:v1.1.0@sha256:6cc786ba4dc96ba81d5010fbf92adabef15aff89753a55e22b8d829cd8b6e2a8",
-  "sourceRevision": "fbacded8768c948b5d351c0b2fe189df61b100a88702620298577d15f02cdeef",
-  "bundleSha256": "9e660931678ff9ce198b798720532fd4d915e127830e5d8d9ebd379feb7b64f2",
-  "releasePackageSha256": "34e28f1d5682af1a55de4df6abc654686dc20ecfd23747a27e894f475c277ff7",
-  "localPackageSha256": "518d1485d75e8f1d7843ba463020614ce7700a9d0ce1f92ac3657d7b4fa2be42",
+  "sourceRevision": "47d8961180918f7346331d4f9f12b9859cf224884b2f19cebbf12dc47bf7ffe4",
+  "bundleSha256": "76a981f5182577f536fe3648eaac3a17cfe52e8188fe2c33c08f674941893289",
+  "releasePackageSha256": "74aa751a93d45340d04d33aaeb483b92ce257c8b2cfd004f43ce3caae3640e0e",
+  "localPackageSha256": "2134952da6446f4ac0bb45accbb779365570cc8b8e4a4fdd0d460ba0d2595975",
   "packageDifference": "Local tar entry mode 0664; release tar entry mode 0644. Sources and JS bundle identical.",
   "localValidation": {
     "domainApiTests": 45,
@@ -58,21 +58,21 @@
   },
   "browserInteraction": {
     "status": "not-run",
-    "reason": "v0.2.3 back button verified by local UI test; browser interaction not observed"
+    "reason": "Compact back button CSS not observed in real browser; local UI/harness passed"
   },
   "integratedVersions": [],
   "previousReleaseEvidence": {
-    "recordedAt": "2026-10-04T11:35:21.480174+00:00",
+    "recordedAt": "2026-10-04T11:51:16.560905+00:00",
     "target": "3.5.1",
     "sourceTag": "v3.5.1",
     "profile": "system-level",
-    "release": "https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/tag/v0.2.1",
-    "releaseWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37199102862",
-    "ciWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37199101590",
-    "implementationCommit": "2a812341cdb6ce99200a796667b8f4e3746dbecb",
+    "release": "https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/tag/v0.2.3",
+    "releaseWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37199985497",
+    "ciWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37199984426",
+    "implementationCommit": "aa94988",
     "context": "k3d-dev",
     "namespace": "argocd",
-    "pod": "argocd-server-78547b6f65-vx7sv",
+    "pod": "argocd-server-8465d8578c-ffmfh",
     "deployment": {
       "name": "argocd-server",
       "rollout": "passed",
@@ -94,10 +94,10 @@
       ]
     },
     "installerImage": "quay.io/argoprojlabs/argocd-extension-installer:v1.1.0@sha256:6cc786ba4dc96ba81d5010fbf92adabef15aff89753a55e22b8d829cd8b6e2a8",
-    "sourceRevision": "f0b4e4564327a812aa622742a0a4a8c738e1f7fcdd206c5bb30c1014373928b7",
-    "bundleSha256": "9e57ec2fff5bf01a1ebe02664f77878c233db02fd82a09c15a85d3eab2164461",
-    "releasePackageSha256": "73fc189b462c927111e4dd0561b12ad3b685e21d17cdb2f66f95462f374710a6",
-    "localPackageSha256": "b40f3e87da4256397af21d80ed8b8315fdd01b377f86d4aa4d83867fc5600b86",
+    "sourceRevision": "fbacded8768c948b5d351c0b2fe189df61b100a88702620298577d15f02cdeef",
+    "bundleSha256": "9e660931678ff9ce198b798720532fd4d915e127830e5d8d9ebd379feb7b64f2",
+    "releasePackageSha256": "34e28f1d5682af1a55de4df6abc654686dc20ecfd23747a27e894f475c277ff7",
+    "localPackageSha256": "518d1485d75e8f1d7843ba463020614ce7700a9d0ce1f92ac3657d7b4fa2be42",
     "packageDifference": "Local tar entry mode 0664; release tar entry mode 0644. Sources and JS bundle identical.",
     "localValidation": {
       "domainApiTests": 45,
@@ -121,21 +121,21 @@
     },
     "browserInteraction": {
       "status": "not-run",
-      "reason": "No available browser surface in this session; v0.2.1 navigation tested in local harness only"
+      "reason": "v0.2.3 back button verified by local UI test; browser interaction not observed"
     },
     "integratedVersions": [],
     "previousReleaseEvidence": {
-      "recordedAt": "2026-10-04T11:23:14.102046+00:00",
+      "recordedAt": "2026-10-04T11:35:21.480174+00:00",
       "target": "3.5.1",
       "sourceTag": "v3.5.1",
       "profile": "system-level",
-      "release": "https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/tag/v0.2.0",
-      "releaseWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37198065337",
-      "ciWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37198064358",
-      "implementationCommit": "d244367191de8691e66e5451ad7ab21619eadfe8",
+      "release": "https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/tag/v0.2.1",
+      "releaseWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37199102862",
+      "ciWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37199101590",
+      "implementationCommit": "2a812341cdb6ce99200a796667b8f4e3746dbecb",
       "context": "k3d-dev",
       "namespace": "argocd",
-      "pod": "argocd-server-f5887ff6d-5j4xb",
+      "pod": "argocd-server-78547b6f65-vx7sv",
       "deployment": {
         "name": "argocd-server",
         "rollout": "passed",
@@ -157,10 +157,10 @@
         ]
       },
       "installerImage": "quay.io/argoprojlabs/argocd-extension-installer:v1.1.0@sha256:6cc786ba4dc96ba81d5010fbf92adabef15aff89753a55e22b8d829cd8b6e2a8",
-      "sourceRevision": "d5e0ee9deae373ab9f88fdbbb720f692e9ce00639dabee94a44f29a751e75210",
-      "bundleSha256": "a9bdbb24b0523bd2c1608929ed4d25165d9c532124eda14c585a46bbb6aaf2e5",
-      "releasePackageSha256": "d7ed1c4e5db6c2e1d67b1bb72e2fb154e531f00d6ee01b0b497506679c59ab13",
-      "localPackageSha256": "025877ac96931a3f825d65d7003984c9c5710dbc75d319a5e381191e9ef108f2",
+      "sourceRevision": "f0b4e4564327a812aa622742a0a4a8c738e1f7fcdd206c5bb30c1014373928b7",
+      "bundleSha256": "9e57ec2fff5bf01a1ebe02664f77878c233db02fd82a09c15a85d3eab2164461",
+      "releasePackageSha256": "73fc189b462c927111e4dd0561b12ad3b685e21d17cdb2f66f95462f374710a6",
+      "localPackageSha256": "b40f3e87da4256397af21d80ed8b8315fdd01b377f86d4aa4d83867fc5600b86",
       "packageDifference": "Local tar entry mode 0664; release tar entry mode 0644. Sources and JS bundle identical.",
       "localValidation": {
         "domainApiTests": 45,
@@ -179,107 +179,54 @@
         "status": "rendered",
         "kubeVersion": "1.35.3",
         "report": "chart-render-validation.json",
-        "controllerRuntime": "not-run"
-      },
-      "authenticatedApiProbe": {
-        "subject": "admin",
-        "project": "default",
-        "method": "GET",
-        "results": [
-          {
-            "addon": "argo-rollouts",
-            "status": 200,
-            "sync": "Synced",
-            "health": "Healthy"
-          },
-          {
-            "addon": "kyverno",
-            "status": 404
-          },
-          {
-            "addon": "external-secrets",
-            "status": 404
-          },
-          {
-            "addon": "prometheus",
-            "status": 404
-          },
-          {
-            "addon": "grafana",
-            "status": 404
-          },
-          {
-            "addon": "istio-base",
-            "status": 404
-          },
-          {
-            "addon": "istiod",
-            "status": 404
-          },
-          {
-            "addon": "istio-cni",
-            "status": 404
-          },
-          {
-            "addon": "istio-ztunnel",
-            "status": 404
-          },
-          {
-            "addon": "istio-ingress",
-            "status": 404
-          },
-          {
-            "addon": "istio-egress",
-            "status": 404
-          },
-          {
-            "addon": "kiali",
-            "status": 404
-          }
-        ],
-        "applicationsCreated": 0,
-        "rbacChanged": false
+        "controllerRuntime": "not-run",
+        "provenance": "unchanged charts; Helm rendering recorded during v0.2.0"
       },
       "browserInteraction": {
         "status": "not-run",
-        "reason": "No browser surfaces available via cua.getState"
+        "reason": "No available browser surface in this session; v0.2.1 navigation tested in local harness only"
       },
       "integratedVersions": [],
-      "dnsIncident": {
-        "initialInstallerError": "github.com DNS timeout",
-        "finalInstaller": "passed",
-        "originalCoreDNSConfiguration": "restored after temporary diagnostic change; upstream subsequently responded"
-      },
       "previousReleaseEvidence": {
-        "recordedAt": "2026-10-04T06:14:04.806161+00:00",
+        "recordedAt": "2026-10-04T11:23:14.102046+00:00",
         "target": "3.5.1",
         "sourceTag": "v3.5.1",
         "profile": "system-level",
-        "release": "https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/tag/v0.1.2",
-        "releaseWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37182063681",
-        "ciWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37182062520",
+        "release": "https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/tag/v0.2.0",
+        "releaseWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37198065337",
+        "ciWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37198064358",
+        "implementationCommit": "d244367191de8691e66e5451ad7ab21619eadfe8",
         "context": "k3d-dev",
         "namespace": "argocd",
+        "pod": "argocd-server-f5887ff6d-5j4xb",
         "deployment": {
+          "name": "argocd-server",
           "rollout": "passed",
-          "installerExitCode": 0,
           "checksumValidation": "passed",
           "podBundleHash": "matched",
           "servedBundleBytes": "matched",
           "existingExtensions": [
             "service-catalog"
           ],
-          "name": "argocd-server"
+          "initContainers": [
+            {
+              "name": "argocd-extension-installer-argo-rollouts",
+              "exitCode": 0
+            },
+            {
+              "name": "argocd-extension-installer-service-catalog",
+              "exitCode": 0
+            }
+          ]
         },
-        "pod": "argocd-server-7b489797fc-t2454",
         "installerImage": "quay.io/argoprojlabs/argocd-extension-installer:v1.1.0@sha256:6cc786ba4dc96ba81d5010fbf92adabef15aff89753a55e22b8d829cd8b6e2a8",
-        "sourceRevision": "fc90c32e769a202199a79b24cd9f106bf424645c0e4eb40a58580cbf18e1bfb8",
-        "bundleSha256": "44836a805f1c6a4b82adf34615ec542bc192c6f213d768673d40cbcaba402374",
-        "releasePackageSha256": "e3020b36553a3d2fd0362984f1f7d25be3e8a98d6dbaae4f28c1d022b61613d2",
-        "localPackageSha256": "7d4843f1ed4993c88aebda57dcce9d7d898ece1e728016220d6314aa8fe5a43f",
+        "sourceRevision": "d5e0ee9deae373ab9f88fdbbb720f692e9ce00639dabee94a44f29a751e75210",
+        "bundleSha256": "a9bdbb24b0523bd2c1608929ed4d25165d9c532124eda14c585a46bbb6aaf2e5",
+        "releasePackageSha256": "d7ed1c4e5db6c2e1d67b1bb72e2fb154e531f00d6ee01b0b497506679c59ab13",
+        "localPackageSha256": "025877ac96931a3f825d65d7003984c9c5710dbc75d319a5e381191e9ef108f2",
         "packageDifference": "Local tar entry mode 0664; release tar entry mode 0644. Sources and JS bundle identical.",
         "localValidation": {
-          "domainApiTests": 30,
+          "domainApiTests": 45,
           "productionHarnessTests": 2,
           "commands": [
             "npm run runtime:setup",
@@ -290,63 +237,187 @@
           "result": "passed",
           "npmAuditVulnerabilities": 0
         },
+        "chartValidation": {
+          "components": 12,
+          "status": "rendered",
+          "kubeVersion": "1.35.3",
+          "report": "chart-render-validation.json",
+          "controllerRuntime": "not-run"
+        },
+        "authenticatedApiProbe": {
+          "subject": "admin",
+          "project": "default",
+          "method": "GET",
+          "results": [
+            {
+              "addon": "argo-rollouts",
+              "status": 200,
+              "sync": "Synced",
+              "health": "Healthy"
+            },
+            {
+              "addon": "kyverno",
+              "status": 404
+            },
+            {
+              "addon": "external-secrets",
+              "status": 404
+            },
+            {
+              "addon": "prometheus",
+              "status": 404
+            },
+            {
+              "addon": "grafana",
+              "status": 404
+            },
+            {
+              "addon": "istio-base",
+              "status": 404
+            },
+            {
+              "addon": "istiod",
+              "status": 404
+            },
+            {
+              "addon": "istio-cni",
+              "status": 404
+            },
+            {
+              "addon": "istio-ztunnel",
+              "status": 404
+            },
+            {
+              "addon": "istio-ingress",
+              "status": 404
+            },
+            {
+              "addon": "istio-egress",
+              "status": 404
+            },
+            {
+              "addon": "kiali",
+              "status": 404
+            }
+          ],
+          "applicationsCreated": 0,
+          "rbacChanged": false
+        },
         "browserInteraction": {
           "status": "not-run",
           "reason": "No browser surfaces available via cua.getState"
         },
-        "rolloutsControllerInstallation": {
-          "status": "not-run",
-          "reason": "Extension was installed; controller creation awaits user action in the page"
-        },
         "integratedVersions": [],
-        "previousRelease": {
-          "version": "v0.1.0",
-          "userReported": "System Level menu entry missing",
-          "regressionReproduced": true
+        "dnsIncident": {
+          "initialInstallerError": "github.com DNS timeout",
+          "finalInstaller": "passed",
+          "originalCoreDNSConfiguration": "restored after temporary diagnostic change; upstream subsequently responded"
         },
-        "startupRegression": {
-          "status": "passed",
-          "scenario": "React 19 schedules host mount before the extensions script executes",
-          "expectedMenu": [
-            "Documentation",
-            "Argo Rollouts"
-          ],
-          "registrationCount": 1
-        },
-        "authenticatedApiProbe": {
-          "subject": "admin",
-          "application": "argo-rollouts",
-          "appNamespace": "argocd",
-          "withoutProject": {
-            "httpStatus": 403,
-            "grpcCode": 7
+        "previousReleaseEvidence": {
+          "recordedAt": "2026-10-04T06:14:04.806161+00:00",
+          "target": "3.5.1",
+          "sourceTag": "v3.5.1",
+          "profile": "system-level",
+          "release": "https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/tag/v0.1.2",
+          "releaseWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37182063681",
+          "ciWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37182062520",
+          "context": "k3d-dev",
+          "namespace": "argocd",
+          "deployment": {
+            "rollout": "passed",
+            "installerExitCode": 0,
+            "checksumValidation": "passed",
+            "podBundleHash": "matched",
+            "servedBundleBytes": "matched",
+            "existingExtensions": [
+              "service-catalog"
+            ],
+            "name": "argocd-server"
           },
-          "withProjectDefault": {
-            "httpStatus": 404,
-            "grpcCode": 5
+          "pod": "argocd-server-7b489797fc-t2454",
+          "installerImage": "quay.io/argoprojlabs/argocd-extension-installer:v1.1.0@sha256:6cc786ba4dc96ba81d5010fbf92adabef15aff89753a55e22b8d829cd8b6e2a8",
+          "sourceRevision": "fc90c32e769a202199a79b24cd9f106bf424645c0e4eb40a58580cbf18e1bfb8",
+          "bundleSha256": "44836a805f1c6a4b82adf34615ec542bc192c6f213d768673d40cbcaba402374",
+          "releasePackageSha256": "e3020b36553a3d2fd0362984f1f7d25be3e8a98d6dbaae4f28c1d022b61613d2",
+          "localPackageSha256": "7d4843f1ed4993c88aebda57dcce9d7d898ece1e728016220d6314aa8fe5a43f",
+          "packageDifference": "Local tar entry mode 0664; release tar entry mode 0644. Sources and JS bundle identical.",
+          "localValidation": {
+            "domainApiTests": 30,
+            "productionHarnessTests": 2,
+            "commands": [
+              "npm run runtime:setup",
+              "npm ci",
+              "npm run validate",
+              "npm run evidence:check"
+            ],
+            "result": "passed",
+            "npmAuditVulnerabilities": 0
           },
-          "rbacChanged": false
-        },
-        "userReportedBrowser": {
-          "systemMenu": "visible in v0.1.1",
-          "installationPreflight": "permission denied in v0.1.1"
+          "browserInteraction": {
+            "status": "not-run",
+            "reason": "No browser surfaces available via cua.getState"
+          },
+          "rolloutsControllerInstallation": {
+            "status": "not-run",
+            "reason": "Extension was installed; controller creation awaits user action in the page"
+          },
+          "integratedVersions": [],
+          "previousRelease": {
+            "version": "v0.1.0",
+            "userReported": "System Level menu entry missing",
+            "regressionReproduced": true
+          },
+          "startupRegression": {
+            "status": "passed",
+            "scenario": "React 19 schedules host mount before the extensions script executes",
+            "expectedMenu": [
+              "Documentation",
+              "Argo Rollouts"
+            ],
+            "registrationCount": 1
+          },
+          "authenticatedApiProbe": {
+            "subject": "admin",
+            "application": "argo-rollouts",
+            "appNamespace": "argocd",
+            "withoutProject": {
+              "httpStatus": 403,
+              "grpcCode": 7
+            },
+            "withProjectDefault": {
+              "httpStatus": 404,
+              "grpcCode": 5
+            },
+            "rbacChanged": false
+          },
+          "userReportedBrowser": {
+            "systemMenu": "visible in v0.1.1",
+            "installationPreflight": "permission denied in v0.1.1"
+          }
         }
+      },
+      "rolloutsPreservation": {
+        "spec": "unchanged compared to pre-deployment snapshot",
+        "uid": "unchanged",
+        "sync": "Synced",
+        "health": "Healthy"
+      },
+      "userReportedBrowser": {
+        "release": "v0.2.0",
+        "catalog": "worked; requested Addons title and application-like detail navigation"
       }
     },
-    "rolloutsPreservation": {
-      "spec": "unchanged compared to pre-deployment snapshot",
-      "uid": "unchanged",
-      "sync": "Synced",
-      "health": "Healthy"
-    },
-    "userReportedBrowser": {
-      "release": "v0.2.0",
-      "catalog": "worked; requested Addons title and application-like detail navigation"
+    "releaseRecovery": {
+      "failedTag": "v0.2.2",
+      "reason": "Broad version replacement changed dependency reference; npm ci failed",
+      "fix": "Restore dependency entries from v0.2.0, update only root package versions, verify npm ci and publish v0.2.3"
     }
   },
-  "releaseRecovery": {
-    "failedTag": "v0.2.2",
-    "reason": "Broad version replacement changed dependency reference; npm ci failed",
-    "fix": "Restore dependency entries from v0.2.0, update only root package versions, verify npm ci and publish v0.2.3"
+  "installationManual": {
+    "file": "installation.md",
+    "releaseAsset": "byte-identical to docs/installation.md",
+    "shellSyntax": "passed",
+    "serverDryRun": "passed",
+    "quickInstallCommand": "executed successfully with explicit --context k3d-dev; rollout completed"
   }
 }
