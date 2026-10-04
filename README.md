@@ -59,9 +59,9 @@ O gerador e o contrato estão registrados em `extension-project.json`; a auditor
 
 ```sh
 # Depois de atualizar a versão também no package-lock.json e commitar:
-git tag v0.2.3
+git tag v0.2.4
 git push origin develop
-git push origin v0.2.3
+git push origin v0.2.4
 ```
 
 Assets publicados:
@@ -69,13 +69,16 @@ Assets publicados:
 - `argo-rollouts-installer.tar.gz`, contendo somente `resources/extension-argo-rollouts-installer.js`;
 - `checksums.txt`, com SHA-256 do tar.gz no formato consumido pelo installer;
 - `argocd-server-patch.yaml`, com URLs ajustadas à tag/repositório da release;
-- `validation-report.json`.
+- `validation-report.json`;
+- `installation.md`, com o manual e comandos de patch.
 
 O workflow usa `GITHUB_TOKEN` com `contents: write`, sem PAT adicional. As URLs fornecidas pressupõem repositório público. Para releases privadas, use os endpoints de assets da API do GitHub e o mecanismo de headers montados de Secret do installer.
 
-A release **v0.2.3** adiciona a navegação lista/detalhe e parâmetros Helm editáveis, usando **Addons** no menu, e preserva as correções de registro React 19 e consulta por projeto. Veja [evidências de implantação e limites](docs/integration.md). A seleção de addons só instala controllers após o botão de confirmação.
+A release **v0.2.4** adiciona a navegação lista/detalhe e parâmetros Helm editáveis, usando **Addons** no menu, e preserva as correções de registro React 19 e consulta por projeto. Veja [evidências de implantação e limites](docs/integration.md). A seleção de addons só instala controllers após o botão de confirmação.
 
 ## Instalar com argocd-extension-installer v1.1.0
+
+Consulte o [manual de instalação](docs/installation.md), com comandos prontos de patch, verificação, permissões, atualização e remoção. O manual também acompanha a release como `installation.md`.
 
 O patch fornecido usa a imagem oficial fixada por digest:
 

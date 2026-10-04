@@ -65,3 +65,6 @@
 #argocd-ext-argo-rollouts-installer .addon-tabs { display: flex; gap: 12px; margin: 24px 0 16px; flex-wrap: wrap; }
 #argocd-ext-argo-rollouts-installer .addon-tabs [aria-selected=true] { border-color: var(--rollouts-accent); color: var(--rollouts-accent); }
 #argocd-ext-argo-rollouts-installer :is(textarea, select, [role=tabpanel]):focus-visible { outline: 3px solid #f3ad56; outline-offset: 3px; }
+
+#argocd-ext-argo-rollouts-installer button.addon-back { display: inline-flex; align-items: center; gap: 6px; padding: 4px 6px; border-color: transparent; border-radius: 4px; font-size: 12px; font-weight: 400; min-height: 28px; }
+#argocd-ext-argo-rollouts-installer button.addon-back:hover { color: var(--rollouts-accent); background: #82949c15; }

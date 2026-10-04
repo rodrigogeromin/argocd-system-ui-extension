@@ -65,7 +65,7 @@ export function Extension({client}: ExtensionProps & {client: CatalogServices}) 
     } finally {active.current = false; setBusy(false);}
   }
   return <section id="argocd-ext-argo-rollouts-installer" aria-label="Addons">
-    {detail && <button onClick={() => openAddon(null)}><i className="fa fa-arrow-left" aria-hidden="true"/> Voltar para Addons</button>}
+    {detail && <button className="addon-back" onClick={() => openAddon(null)}><i className="fa fa-arrow-left" aria-hidden="true"/> Voltar para Addons</button>}
     <header className="rollouts-header"><span className="rollouts-eyebrow">PLATAFORMA · ADDONS KUBERNETES</span><nav aria-label="Navegação de addons">{detail ? <><a className="rollouts-link" href={addonURL(null)} onClick={event => {event.preventDefault(); openAddon(null);}}>Addons</a><span> / {detail.title}</span></> : null}</nav><h1 ref={heading} tabIndex={-1}>{detail?.title ?? 'Addons'}</h1><p>{detail?.description ?? 'Escolha, configure e instale os componentes da sua plataforma com Applications gerenciadas pelo Argo CD.'}</p></header>
     {!detail && <div className="catalog-toolbar"><label>Buscar addon<input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Istio, políticas, observabilidade…" /></label><label>Categoria<select value={category} onChange={event => setCategory(event.target.value)}>{categories.map(item => <option key={item}>{item}</option>)}</select></label><button disabled={busy || !!validateTarget(target)} onClick={() => {void discover();}}>Atualizar status</button></div>}
     <details className="rollouts-card catalog-target"><summary>Destino da instalação · {target.project} · {target.applicationNamespace}</summary><fieldset disabled={busy}><div className="rollouts-fields">
