@@ -1,0 +1,26 @@
+{
+  "verifiedAt": "2026-10-04T14:00:34.574938+00:00",
+  "context": "k3d-dev",
+  "symptom": "Application external-secrets HTTP 400: charts.external-secrets.io DNS SERVFAIL",
+  "rootCause": "CoreDNS upstream /etc/resolv.conf points to 172.18.0.1; upstream requests time out",
+  "changes": {
+    "coredns": "ConfigMap kube-system/coredns forward . 8.8.8.8 8.8.4.4; other plugins and NodeHosts preserved",
+    "node": "k3d-dev-server-0 /etc/resolv.conf uses 8.8.8.8 and 8.8.4.4 for image pulls",
+    "scope": "k3d-dev only; no Argo CD ConfigMaps changed",
+    "status": "left applied; not reverted"
+  },
+  "checks": {
+    "clusterDNSExternal": "charts.external-secrets.io resolved via 10.43.0.10",
+    "clusterDNSInternal": [
+      "kubernetes.default.svc.cluster.local",
+      "argocd-repo-server.argocd.svc.cluster.local"
+    ],
+    "repoServerHelm": "helm show chart external-secrets --repo https://charts.external-secrets.io --version 2.11.0 passed",
+    "corednsReload": "Reloading complete; existing pod remained Ready"
+  },
+  "applicationInstallation": "not performed; failed API validation did not create an Application",
+  "persistenceLimits": [
+    "CoreDNS ConfigMap survives pod restarts; K3s manifest reconciliation/recreation can reset it",
+    "Node resolv.conf remains changed in existing container; reapply in cluster configuration if recreating node"
+  ]
+}

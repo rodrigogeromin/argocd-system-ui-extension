@@ -79,13 +79,15 @@ O padrão é projeto `default`, Applications em `argocd` e cluster local. Ajuste
 
 | Sintoma | Como verificar |
 | --- | --- |
-| Pod em Init:Error / Init:CrashLoopBackOff | Consulte os logs do init container do pod novo. Verifique DNS, acesso às URLs da release e checksum. |
+| Pod em Init:Error / Init:CrashLoopBackOff | Consulte os logs do init container do pod novo. Verifique DNS, acesso às URLs da release e checksum. Para a falha observada em k3d-dev, veja [correção de DNS](dns-troubleshooting.md). |
 | Addons não aparece | Confira o arquivo no pod novo, conclusão do rollout e recarregue a página sem cache. Confirme Argo CD 3.5.1. |
 | permission denied ao consultar/criar | Confira a sessão, projeto selecionado e RBAC. Um 403 real interrompe a instalação; não é tratado como Application ausente. |
 | Application criada, addon não saudável | Abra a Application para examinar erros de sync, permissões do AppProject/controller e requisitos do chart. Dependentes aguardam Synced/Healthy. |
 | Patch desaparece depois | Integre o init container e o volume à fonte Helm/GitOps que gerencia o Deployment. |
 
 Se houver mais de um pod durante o rollout, use `kubectl logs POD_NOVO -c argocd-extension-installer-argo-rollouts` para evitar consultar os logs da versão anterior.
+
+Falhas `server misbehaving` ao resolver um repositório Helm são falhas de DNS do cluster. Consulte o [diagnóstico do External Secrets no k3d-dev](dns-troubleshooting.md).
 
 ## 6. Atualização e reversão
 
