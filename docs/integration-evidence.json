@@ -1,11 +1,11 @@
 {
-  "recordedAt": "2026-10-04T06:04:42.766629+00:00",
+  "recordedAt": "2026-10-04T06:14:04.806161+00:00",
   "target": "3.5.1",
   "sourceTag": "v3.5.1",
   "profile": "system-level",
-  "release": "https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/tag/v0.1.1",
-  "releaseWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37181599196",
-  "ciWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37181581309",
+  "release": "https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/tag/v0.1.2",
+  "releaseWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37182063681",
+  "ciWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37182062520",
   "context": "k3d-dev",
   "namespace": "argocd",
   "deployment": {
@@ -19,15 +19,15 @@
     ],
     "name": "argocd-server"
   },
-  "pod": "argocd-server-59579fdf54-lbrjd",
+  "pod": "argocd-server-7b489797fc-t2454",
   "installerImage": "quay.io/argoprojlabs/argocd-extension-installer:v1.1.0@sha256:6cc786ba4dc96ba81d5010fbf92adabef15aff89753a55e22b8d829cd8b6e2a8",
-  "sourceRevision": "f1be06f75d03a5c4415e90887423ab3fafefe02889a69f7375471ecdf4c08ef4",
-  "bundleSha256": "2cbc6b224dc7882c8f562ead6c9349505f1a915d4b084d70fa1c96bca01b0573",
-  "releasePackageSha256": "5978b4233461fdb53a1f52984a0ec389578a6f7f9caf3f6ae91fef9031eab3b4",
-  "localPackageSha256": "fb59e34958501d60aa415e2df5fa660452755ae7d07ff2e507331f0c983abe0a",
+  "sourceRevision": "fc90c32e769a202199a79b24cd9f106bf424645c0e4eb40a58580cbf18e1bfb8",
+  "bundleSha256": "44836a805f1c6a4b82adf34615ec542bc192c6f213d768673d40cbcaba402374",
+  "releasePackageSha256": "e3020b36553a3d2fd0362984f1f7d25be3e8a98d6dbaae4f28c1d022b61613d2",
+  "localPackageSha256": "7d4843f1ed4993c88aebda57dcce9d7d898ece1e728016220d6314aa8fe5a43f",
   "packageDifference": "Local tar entry mode 0664; release tar entry mode 0644. Sources and JS bundle identical.",
   "localValidation": {
-    "domainApiTests": 27,
+    "domainApiTests": 30,
     "productionHarnessTests": 2,
     "commands": [
       "npm run runtime:setup",
@@ -60,5 +60,23 @@
       "Argo Rollouts"
     ],
     "registrationCount": 1
+  },
+  "authenticatedApiProbe": {
+    "subject": "admin",
+    "application": "argo-rollouts",
+    "appNamespace": "argocd",
+    "withoutProject": {
+      "httpStatus": 403,
+      "grpcCode": 7
+    },
+    "withProjectDefault": {
+      "httpStatus": 404,
+      "grpcCode": 5
+    },
+    "rbacChanged": false
+  },
+  "userReportedBrowser": {
+    "systemMenu": "visible in v0.1.1",
+    "installationPreflight": "permission denied in v0.1.1"
   }
 }

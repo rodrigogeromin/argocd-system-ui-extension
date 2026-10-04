@@ -58,7 +58,7 @@ Assets publicados:
 
 O workflow usa `GITHUB_TOKEN` com `contents: write`, sem PAT adicional. As URLs fornecidas pressupõem repositório público. Para releases privadas, use os endpoints de assets da API do GitHub e o mecanismo de headers montados de Secret do installer.
 
-A release **v0.1.1** corrige o registro do menu durante a montagem assíncrona do React 19. Ela já está instalada no Argo CD 3.5.1 do contexto **k3d-dev**, com rollout e bundle servido conferidos. Veja [evidências e limites](docs/integration.md). A instalação do controller Rollouts é acionada pelo botão da página.
+A release **v0.1.2** inclui a correção do menu no React 19 e a consulta por projeto para distinguir Application ausente de erro real de permissão. Ela já está instalada no Argo CD 3.5.1 do contexto **k3d-dev**, com rollout e bundle servido conferidos. Veja [evidências e limites](docs/integration.md). A instalação do controller Rollouts é acionada pelo botão da página.
 
 ## Instalar com argocd-extension-installer v1.1.0
 
