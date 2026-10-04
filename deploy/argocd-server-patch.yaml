@@ -13,11 +13,11 @@ spec:
             - name: EXTENSION_NAME
               value: argo-rollouts-installer
             - name: EXTENSION_VERSION
-              value: v0.1.2
+              value: v0.2.0
             - name: EXTENSION_URL
-              value: https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/download/v0.1.2/argo-rollouts-installer.tar.gz
+              value: https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/download/v0.2.0/argo-rollouts-installer.tar.gz
             - name: EXTENSION_CHECKSUM_URL
-              value: https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/download/v0.1.2/checksums.txt
+              value: https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/download/v0.2.0/checksums.txt
             - name: EXTENSIONS_DIR
               value: /tmp/extensions/resources
           volumeMounts:

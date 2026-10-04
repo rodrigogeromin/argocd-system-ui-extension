@@ -35,3 +35,28 @@
 #argocd-ext-argo-rollouts-installer .rollouts-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 @media (max-width: 850px) { #argocd-ext-argo-rollouts-installer .rollouts-grid { grid-template-columns: 1fr; } }
 @media (max-width: 480px) { #argocd-ext-argo-rollouts-installer .rollouts-fields { grid-template-columns: 1fr; } #argocd-ext-argo-rollouts-installer .rollouts-card { padding: 18px; } }
+
+#argocd-ext-argo-rollouts-installer .catalog-toolbar { display: flex; align-items: end; gap: 16px; margin: 26px 0; flex-wrap: wrap; }
+#argocd-ext-argo-rollouts-installer .catalog-toolbar label:first-child { flex: 1; min-width: 200px; }
+#argocd-ext-argo-rollouts-installer :is(select, textarea) { padding: 11px 12px; border: 1px solid var(--rollouts-border); border-radius: 6px; width: 100%; background: transparent; color: inherit; font: inherit; margin-top: 7px; }
+#argocd-ext-argo-rollouts-installer select option { background: #fff; color: #333; }
+#argocd-ext-argo-rollouts-installer textarea { font-family: monospace; resize: vertical; }
+#argocd-ext-argo-rollouts-installer .catalog-target { padding: 18px 24px; }
+#argocd-ext-argo-rollouts-installer .catalog-presets { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 24px 0; }
+#argocd-ext-argo-rollouts-installer .catalog-presets span { font-size: 13px; opacity: .8; }
+#argocd-ext-argo-rollouts-installer .catalog-presets button { padding: 9px 13px; font-size: 12px; }
+#argocd-ext-argo-rollouts-installer .catalog-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 18px; }
+#argocd-ext-argo-rollouts-installer .catalog-addon { padding: 22px; border-top: 3px solid var(--rollouts-border); }
+#argocd-ext-argo-rollouts-installer .catalog-addon.is-selected { border-color: var(--rollouts-accent); background: #0b827e09; }
+#argocd-ext-argo-rollouts-installer .catalog-card-heading { display: flex; align-items: center; gap: 9px; margin-bottom: 18px; }
+#argocd-ext-argo-rollouts-installer .catalog-card-heading i { color: var(--rollouts-accent); font-size: 20px; }
+#argocd-ext-argo-rollouts-installer .catalog-category { font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+#argocd-ext-argo-rollouts-installer .catalog-badge { margin-left: auto; padding: 4px 7px; border: 1px solid var(--rollouts-border); border-radius: 5px; font-size: 10px; white-space: nowrap; }
+#argocd-ext-argo-rollouts-installer .phase-ready { color: var(--rollouts-accent); }
+#argocd-ext-argo-rollouts-installer .phase-error { color: #d45454; }
+#argocd-ext-argo-rollouts-installer .catalog-addon fieldset label { margin-bottom: 14px; }
+#argocd-ext-argo-rollouts-installer .catalog-selection { margin: 24px 0; display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+#argocd-ext-argo-rollouts-installer .catalog-selection > div:first-child { flex: 1; min-width: 200px; }
+#argocd-ext-argo-rollouts-installer .catalog-review { margin: 24px 0; }
+#argocd-ext-argo-rollouts-installer .catalog-review details { margin-bottom: 20px; }
+@media (max-width: 500px) { #argocd-ext-argo-rollouts-installer .catalog-toolbar { align-items: stretch; } #argocd-ext-argo-rollouts-installer .catalog-toolbar > * { width: 100%; } }

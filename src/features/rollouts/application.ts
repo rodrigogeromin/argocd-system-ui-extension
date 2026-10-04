@@ -9,21 +9,8 @@ export const defaults: InstallConfig = {
   server: 'https://kubernetes.default.svc', namespace: 'argo-rollouts',
   chartVersion: DEFAULT_CHART_VERSION, replicas: 1, dashboard: false
 };
-export interface RolloutsApplication {
-  apiVersion?: string; kind?: string;
-  metadata: {name: string; namespace?: string};
-  spec: {
-    project: string;
-    source?: {repoURL: string; chart?: string; targetRevision: string; helm?: {releaseName?: string; valuesObject?: Record<string, unknown>}};
-    destination: {server?: string; name?: string; namespace: string};
-    syncPolicy?: {automated?: {enabled?: boolean; prune?: boolean; selfHeal?: boolean}; syncOptions?: string[]};
-  };
-  status?: {
-    health?: {status?: string; message?: string}; sync?: {status?: string};
-    operationState?: {phase?: string; message?: string};
-    conditions?: Array<{type: string; message: string}>;
-  };
-}
+export type {AddonApplication as RolloutsApplication, CatalogServices as RolloutsServices} from '../catalog/types';
+import type {AddonApplication as RolloutsApplication} from '../catalog/types';
 export function validateConfig(config: InstallConfig): string | undefined {
   for (const [label, value] of [['Nome da Application', config.name], ['Namespace da Application', config.applicationNamespace], ['Namespace de destino', config.namespace]]) {
     if (value.length > 63 || !/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(value)) return `${label}: use até 63 caracteres minúsculos, números ou hífens.`;
@@ -55,10 +42,4 @@ export function isReady(app: RolloutsApplication): boolean {
   return isRolloutsApplication(app) && app.status?.health?.status === 'Healthy' && app.status?.sync?.status === 'Synced'
     && !['Running', 'Failed', 'Error'].includes(app.status?.operationState?.phase ?? '')
     && !(app.status?.conditions ?? []).some(condition => condition.type.endsWith('Error'));
-}
-
-export interface RolloutsServices {
-  get(name: string, namespace: string, signal: AbortSignal, project: string): Promise<RolloutsApplication | null>;
-  create(application: RolloutsApplication, signal: AbortSignal): Promise<RolloutsApplication>;
-  applicationURL(name: string, namespace: string): string;
 }

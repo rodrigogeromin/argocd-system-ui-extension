@@ -1,26 +1,40 @@
-# Argo Rollouts Installer — Argo CD System Level Extension
+# Catálogo de Addons — Argo CD System Level Extension
 
-Extension React/TypeScript para **Argo CD 3.5.1**, registrada como página **System Level** em **Argo Rollouts**, no menu lateral (`/argo-rollouts`). Usa a sessão e a API do Argo CD para instalar o controller do Argo Rollouts através de uma Application Helm.
+Extension React/TypeScript para **Argo CD 3.5.1**, registrada como **Catálogo de Addons** abaixo de Documentation. O caminho `/argo-rollouts` e o nome do arquivo são preservados para substituir o instalador existente sem duplicar o menu. Usa a sessão e a API do Argo CD; não armazena tokens.
 
 ## Jornada
 
-1. Configure nome, projeto, namespace da Application, cluster cadastrado, namespace de destino, versão exata do chart, réplicas e dashboard opcional.
-2. Expanda **Manifesto que será enviado à API** e revise a Application.
-3. Clique **Instalar Argo Rollouts**. A extension consulta a Application antes de criar e envia `POST /api/v1/applications?validate=true&upsert=false` com o manifesto diretamente no body.
-4. A Application usa `https://argoproj.github.io/argo-helm`, chart `argo-rollouts`, versão padrão **2.43.5** (Rollouts **v1.10.0**). Helm instala CRDs e RBAC de cluster; o Argo CD cria o namespace e sincroniza automaticamente. `selfHeal: true`, `prune: false`.
-5. A página acompanha a Application a cada cinco segundos e só mostra conclusão quando estiver **Synced + Healthy**, sem erro de operação ou condição de erro. **Abrir Application** leva ao diagnóstico nativo do Argo CD.
+1. Selecione addons individuais ou os presets **Observabilidade**, **Istio Sidecar + observabilidade** e **Istio Ambient + observabilidade**. Dependências são selecionadas automaticamente.
+2. Configure projeto, namespace das Applications, cluster e plataforma. O padrão `k3d` corresponde à instalação atual; ajuste para outros clusters. Cada addon permite nome, namespace, versão exata e overrides Helm em JSON.
+3. Clique **Revisar instalação** e confira os manifestos. Somente **Instalar selecionados** cria Applications pela API, com `validate=true&upsert=false`, autosync, selfHeal e sem prune.
+4. O preflight consulta toda a seleção com `projects=<projeto>` antes de escrever. Erros reais 401/403 e conflitos bloqueiam a criação. Applications existentes compatíveis são preservadas; versões Istio diferentes bloqueiam a composição da pilha. O catálogo não faz upgrades.
+5. Cada dependência precisa estar **Synced + Healthy** antes da criação dos seus dependentes. Acompanhamento a cada cinco segundos, até 15 minutos; **Abrir Application** oferece diagnóstico nativo. **Atualizar status** só consulta.
 
-**Consultar instalação** retoma o acompanhamento após recarregar a página, sem criar recursos. Uma Application existente nunca é sobrescrita; a UI apresenta sua versão e destino reais. Se o nome pertencer a outra source, escolha outro nome. Em erro de rede após a criação, consulte novamente antes de instalar. Os parâmetros de uma Application existente ficam bloqueados; alterações e upgrades seguem a gestão normal da Application.
+Interromper o acompanhamento não remove Applications: elas continuam sincronizando no Argo CD. Após falha parcial ou recarga, selecione novamente para retomar. Somente HTTP 404 significa ausência. Cada requisição tem timeout de 20 segundos; o cliente respeita o base href e cancela requisições ao sair da página.
 
-O dashboard opcional é instalado como Service interno, sem publicação de ingress. Não são armazenados tokens nem credenciais. A consulta inclui `projects=<projeto>`: sem esse parâmetro, o Argo CD pode retornar 403 mesmo para admin quando a Application ainda não existe. O cliente respeita `<base href>` para instalações do Argo CD em subpaths, valida respostas, limita cada chamada a 20 segundos e cancela o acompanhamento ao sair da página. 401/403 exibem erro de sessão/permissão; somente 404 é tratado como ausência.
+## Addons e versões
+
+| Addon / componente | Chart | Versão |
+| --- | --- | --- |
+| Argo Rollouts | argo-rollouts | 2.43.5 |
+| Kyverno | kyverno | 3.9.1 |
+| External Secrets | external-secrets | 2.11.0 |
+| Prometheus Operator, Prometheus e Alertmanager | kube-prometheus-stack | 91.9.0 |
+| Grafana | grafana | 13.2.7 |
+| Istio Base, istiod, CNI, ztunnel, ingress e egress | base / istiod / cni / ztunnel / gateway | 1.31.1 |
+| Kiali | kiali-server | 2.32.0 |
+
+Repositórios e notas estão em `src/features/catalog/addons.json`. Downloads oficiais e digests estão em [charts-audit.json](docs/charts-audit.json). Os 12 componentes foram renderizados com Helm para Kubernetes 1.35.3; [chart-render-validation.json](docs/chart-render-validation.json) registra os recursos. Isso valida templates, sem afirmar que todos os controllers foram instalados e exercitados.
+
+Prometheus desativa o Grafana embutido para evitar instalação duplicada. Grafana e Kiali usam o Service do Prometheus selecionado; configure a URL global quando usar um servidor externo. Grafana usa senha gerada pelo chart, sem credencial embutida; Kiali exige token e opera em modo de leitura. Serviços são internos. Persistência e configuração de produção devem ser definidas nos overrides; os padrões dos charts podem usar armazenamento efêmero.
+
+A pilha Istio inclui seus componentes Helm, gateways e observabilidade. Gateway API CRDs, waypoints, tracing, roteamento e inclusão de workloads no mesh exigem configuração posterior. O catálogo não rotula namespaces existentes. CNI ajusta caminhos por plataforma e exige acesso ao host. Os gateways usam ClusterIP para não conflitar com Traefik no k3d. Kyverno exige policies posteriores; External Secrets exige SecretStore/ClusterSecretStore e credenciais de provedor.
 
 ## Pré-requisitos e RBAC
 
-O usuário precisa de `applications, get` e `applications, create` para `<projeto>/<application>` (ou `<projeto>/<namespace-application>/<application>` em modo Applications in any namespace). A extension não altera RBAC nem cria AppProjects. `sync` manual ocorre pela UI nativa e exige a permissão correspondente; a criação configura autosync no controller.
+O usuário precisa de `applications, get` e `applications, create` para o projeto e os nomes selecionados. O AppProject deve permitir todos os repositórios selecionados, destinos e recursos de cluster, incluindo CRDs, ClusterRoles, ClusterRoleBindings e Namespace. O controller precisa das permissões Kubernetes correspondentes. A extension não altera RBAC, projetos ou sync windows. Applications fora de argocd exigem suporte e allowlist no Argo CD.
 
-O AppProject precisa permitir o repositório `https://argoproj.github.io/argo-helm`, o cluster/namespace de destino e os recursos renderizados pelo chart, incluindo CRDs, ClusterRoles, ClusterRoleBindings e Namespace. O controller do Argo CD precisa de permissão Kubernetes para aplicá-los. Não há bypass de restrições do projeto, de RBAC ou de sync windows. Para Applications fora de `argocd`, configure o suporte e a allowlist de namespaces no próprio Argo CD.
-
-Não crie uma segunda instalação se o cluster já tiver um controller Rollouts gerenciado por outro mecanismo; confira os recursos e escolha o fluxo de migração apropriado.
+Confira instalações já existentes antes de selecionar addons; `FailOnSharedResource=true` impede apropriação de recursos gerenciados por outras Applications. Instalações gerenciadas por outro mecanismo exigem análise de migração.
 
 ## Desenvolvimento e verificação
 
@@ -44,9 +58,9 @@ O gerador e o contrato estão registrados em `extension-project.json`; a auditor
 
 ```sh
 # Depois de atualizar a versão também no package-lock.json e commitar:
-git tag v0.1.2
+git tag v0.2.0
 git push origin develop
-git push origin v0.1.2
+git push origin v0.2.0
 ```
 
 Assets publicados:
@@ -58,7 +72,7 @@ Assets publicados:
 
 O workflow usa `GITHUB_TOKEN` com `contents: write`, sem PAT adicional. As URLs fornecidas pressupõem repositório público. Para releases privadas, use os endpoints de assets da API do GitHub e o mecanismo de headers montados de Secret do installer.
 
-A release **v0.1.2** inclui a correção do menu no React 19 e a consulta por projeto para distinguir Application ausente de erro real de permissão. Ela já está instalada no Argo CD 3.5.1 do contexto **k3d-dev**, com rollout e bundle servido conferidos. Veja [evidências e limites](docs/integration.md). A instalação do controller Rollouts é acionada pelo botão da página.
+A release **v0.2.0** transforma o instalador em catálogo e preserva as correções de registro React 19 e consulta por projeto. Veja [evidências de implantação e limites](docs/integration.md). A seleção de addons só instala controllers após o botão de confirmação.
 
 ## Instalar com argocd-extension-installer v1.1.0
 
@@ -80,6 +94,6 @@ kubectl --context k3d-dev -n argocd rollout status deployment/argocd-server
 
 Para outra versão, prefira o patch anexado à release. Em outra instalação, ajuste namespace/nome do Deployment e volume: verifique os mounts existentes antes de aplicar. Instalações gerenciadas por Helm/GitOps devem incorporar o mesmo init container e mount à fonte de verdade para que uma reconciliação não reverta o patch. Não é necessário configurar um backend proxy.
 
-Abra o Argo CD, recarregue a página e selecione **Argo Rollouts** no menu lateral. Para remover a extension, remova apenas o init container `argocd-extension-installer-argo-rollouts` e reinicie o Deployment. Isso não remove Applications nem a instalação do Rollouts.
+Abra o Argo CD, recarregue a página e selecione **Catálogo de Addons** no menu lateral. Para remover a extension, remova apenas o init container `argocd-extension-installer-argo-rollouts` e reinicie o Deployment. Isso não remove Applications nem a instalação do Rollouts.
 
 Referências oficiais: [contrato v3.5.1](https://github.com/argoproj/argo-cd/blob/v3.5.1/ui/src/app/shared/services/extensions-service.ts), [API de Applications](https://github.com/argoproj/argo-cd/blob/v3.5.1/server/application/application.proto), [chart Helm](https://github.com/argoproj/argo-helm/tree/argo-rollouts-2.43.5/charts/argo-rollouts), [installer v1.1.0](https://github.com/argoproj-labs/argocd-extension-installer/tree/v1.1.0).

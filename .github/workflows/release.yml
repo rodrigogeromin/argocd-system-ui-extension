@@ -51,4 +51,4 @@ jobs:
             dist/checksums.txt \
             dist/argocd-server-patch.yaml \
             validation-report.json \
-            --verify-tag --generate-notes --title "Argo Rollouts Installer $RELEASE_TAG"
+            --verify-tag --generate-notes --title "Argo CD Addon Catalog $RELEASE_TAG"

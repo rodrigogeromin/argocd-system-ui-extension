@@ -1,0 +1,95 @@
+{
+  "auditedOn": "2026-10-04",
+  "charts": [
+    {
+      "repository": "kyverno",
+      "chart": "kyverno",
+      "version": "3.9.1",
+      "appVersion": "v1.19.1",
+      "kubeVersion": ">=1.25.0-0",
+      "url": "https://kyverno.github.io/kyverno/kyverno-3.9.1.tgz",
+      "digest": "7b7fe51a431b5b133b0ce7eb9dcb222b6a37fb967c163223cf480054ad14d752"
+    },
+    {
+      "repository": "external-secrets",
+      "chart": "external-secrets",
+      "version": "2.11.0",
+      "appVersion": "v2.11.0",
+      "kubeVersion": ">= 1.19.0-0",
+      "url": "https://github.com/external-secrets/external-secrets/releases/download/helm-chart-2.11.0/external-secrets-2.11.0.tgz",
+      "digest": "8199b42fe80b871c6a86233a80bb14f599fd6e1e6462c1216d836577f845e161"
+    },
+    {
+      "repository": "prometheus",
+      "chart": "kube-prometheus-stack",
+      "version": "91.9.0",
+      "appVersion": "v0.94.1",
+      "kubeVersion": ">=1.25.0-0",
+      "url": "https://github.com/prometheus-community/helm-charts/releases/download/kube-prometheus-stack-91.9.0/kube-prometheus-stack-91.9.0.tgz",
+      "digest": "75ee7cf15ee9492faf1babc0682237caf6ba706700370cd34b1ea261cee737fe"
+    },
+    {
+      "repository": "grafana",
+      "chart": "grafana",
+      "version": "13.2.7",
+      "appVersion": "13.2.3",
+      "kubeVersion": "^1.25.0-0",
+      "url": "https://github.com/grafana-community/helm-charts/releases/download/grafana-13.2.7/grafana-13.2.7.tgz",
+      "digest": "5189a48131311513ef7bf5e22f1ed6424cd1c7cec61bc1995fab04d3cf46f36a"
+    },
+    {
+      "repository": "istio",
+      "chart": "base",
+      "version": "1.31.1",
+      "appVersion": "1.31.1",
+      "kubeVersion": null,
+      "url": "https://blob.istio.io/istio-release/charts/base-1.31.1.tgz",
+      "digest": "6a5f3a628e31ea03994f5c8ff44804fcec54ac1b13893f1a3f3c26340c8f2015"
+    },
+    {
+      "repository": "istio",
+      "chart": "istiod",
+      "version": "1.31.1",
+      "appVersion": "1.31.1",
+      "kubeVersion": null,
+      "url": "https://blob.istio.io/istio-release/charts/istiod-1.31.1.tgz",
+      "digest": "d49e3ac3100e9c24efbd3a7c26e8e6dd707431f8c06f203182ba54a2e8651a74"
+    },
+    {
+      "repository": "istio",
+      "chart": "cni",
+      "version": "1.31.1",
+      "appVersion": "1.31.1",
+      "kubeVersion": null,
+      "url": "https://blob.istio.io/istio-release/charts/cni-1.31.1.tgz",
+      "digest": "e7cfcbd6842f0b23026dc81bd99edd0e5da87d9f5e2e75b45a2dc2a69f873127"
+    },
+    {
+      "repository": "istio",
+      "chart": "ztunnel",
+      "version": "1.31.1",
+      "appVersion": "1.31.1",
+      "kubeVersion": null,
+      "url": "https://blob.istio.io/istio-release/charts/ztunnel-1.31.1.tgz",
+      "digest": "6fa9f7f88ae68fe7c84df4ef09711639bc8bc38b31769e85336676ebd8ae70b5"
+    },
+    {
+      "repository": "istio",
+      "chart": "gateway",
+      "version": "1.31.1",
+      "appVersion": "1.31.1",
+      "kubeVersion": null,
+      "url": "https://blob.istio.io/istio-release/charts/gateway-1.31.1.tgz",
+      "digest": "bfeb6ecf73586e6992c038daae518d11795e932a7c2d034f6e16c7e60638757e"
+    },
+    {
+      "repository": "kiali",
+      "chart": "kiali-server",
+      "version": "2.32.0",
+      "appVersion": "v2.32.0",
+      "kubeVersion": null,
+      "url": "https://kiali.org/helm-charts/kiali-server-2.32.0.tgz",
+      "digest": "29e36dc777d5c1446f91882c1fd8e98a89d3ff4d5407c4c2f721b6fad1c7d119"
+    }
+  ]
+}

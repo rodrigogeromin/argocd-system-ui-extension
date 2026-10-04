@@ -1,10 +1,10 @@
 import React from 'react';
 import {Extension as InstallationPage} from '../app/Extension';
 import {ArgoClient, applicationURL} from './api';
-import type {RolloutsServices} from '../features/rollouts/application';
+import type {CatalogServices} from '../features/catalog/types';
 import type {ExtensionProps} from './types';
 const api = new ArgoClient();
-const services: RolloutsServices = {
+const services: CatalogServices = {
   get: (name, namespace, signal, project) => api.get(name, namespace, signal, project),
   create: (application, signal) => api.create(application, signal),
   applicationURL

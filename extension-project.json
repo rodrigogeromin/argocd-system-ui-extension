@@ -1,12 +1,12 @@
 {
   "name": "argo-rollouts-installer",
-  "description": "Instale Argo Rollouts com uma Application Helm gerenciada pelo Argo CD.",
+  "description": "Catálogo de addons Kubernetes instalados por Applications Helm e pela API do Argo CD.",
   "argoCdVersion": "3.5.1",
   "profile": "system-level",
   "registration": {
-    "title": "Argo Rollouts",
+    "title": "Catálogo de Addons",
     "path": "/argo-rollouts",
-    "icon": "fa-rocket"
+    "icon": "fa-cubes"
   },
   "dataSource": "argocd-api",
   "backend": {
@@ -51,7 +51,8 @@
     "templateSha256": "3e398c63037d975c76f93d09dc34f16968f65b156fd22565cf2f8d6dd7678dff",
     "adaptations": [
       "System Level Argo Rollouts installation journey with session-authenticated Argo CD API adapter",
-      "Jest 30 and patched ts-loader; native local preview server replaces webpack-dev-server"
+      "Jest 30 and patched ts-loader; native local preview server replaces webpack-dev-server",
+      "Addon catalog with multi-selection, pinned charts, review and dependency-gated installation; preserves Rollouts API/auth/startup fixes and legacy artifact/path"
     ]
   },
   "compatibility": {

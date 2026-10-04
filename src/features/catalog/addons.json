@@ -1,0 +1,183 @@
+[
+  {
+    "id": "argo-rollouts",
+    "title": "Argo Rollouts",
+    "chart": "argo-rollouts",
+    "repository": "https://argoproj.github.io/argo-helm",
+    "version": "2.43.5",
+    "appVersion": "v1.10.0",
+    "namespace": "argo-rollouts",
+    "category": "Entrega",
+    "description": "Canary e blue-green com análise e promoção de versões.",
+    "notes": "Instala controller e CRDs. O dashboard é opcional via values; Rollouts e estratégias são configurados nas suas aplicações.",
+    "dependencies": [],
+    "icon": "fa-rocket"
+  },
+  {
+    "id": "kyverno",
+    "title": "Kyverno",
+    "chart": "kyverno",
+    "repository": "https://kyverno.github.io/kyverno/",
+    "version": "3.9.1",
+    "appVersion": "v1.19.1",
+    "namespace": "kyverno",
+    "category": "Segurança",
+    "description": "Políticas Kubernetes para validar, mutar e gerar recursos.",
+    "notes": "Instala controllers, CRDs e webhooks de admissão. As políticas de negócio são configuradas após a instalação.",
+    "dependencies": [],
+    "icon": "fa-shield-halved"
+  },
+  {
+    "id": "external-secrets",
+    "title": "External Secrets",
+    "chart": "external-secrets",
+    "repository": "https://charts.external-secrets.io",
+    "version": "2.11.0",
+    "appVersion": "v2.11.0",
+    "namespace": "external-secrets",
+    "category": "Segredos",
+    "description": "Sincronize secrets de AWS, Vault e outros provedores.",
+    "notes": "Instala o operador e CRDs. Configure SecretStore/ClusterSecretStore e autenticação do provedor depois; nenhuma credencial cloud é criada.",
+    "dependencies": [],
+    "icon": "fa-key"
+  },
+  {
+    "id": "prometheus",
+    "title": "Prometheus Stack",
+    "chart": "kube-prometheus-stack",
+    "repository": "https://prometheus-community.github.io/helm-charts",
+    "version": "91.9.0",
+    "appVersion": "v0.94.1",
+    "namespace": "monitoring",
+    "category": "Observabilidade",
+    "description": "Prometheus Operator, Prometheus, Alertmanager e exporters.",
+    "notes": "Grafana fica desabilitado neste chart para evitar duplicação. Storage é efêmero por padrão; configure retenção e PVCs em values para produção.",
+    "dependencies": [],
+    "icon": "fa-chart-line"
+  },
+  {
+    "id": "grafana",
+    "title": "Grafana",
+    "chart": "grafana",
+    "repository": "https://grafana-community.github.io/helm-charts",
+    "version": "13.2.7",
+    "appVersion": "13.2.3",
+    "namespace": "monitoring",
+    "category": "Observabilidade",
+    "description": "Dashboards e uma datasource Prometheus pronta para configurar.",
+    "notes": "Service interno, sem ingress. A senha admin é gerada pelo chart em um Secret Kubernetes; use admin.existingSecret para credenciais gerenciadas. Storage é efêmero por padrão.",
+    "dependencies": [],
+    "icon": "fa-chart-pie"
+  },
+  {
+    "id": "istio-base",
+    "title": "Istio Base",
+    "chart": "base",
+    "repository": "https://blob.istio.io/istio-release/charts",
+    "version": "1.31.1",
+    "appVersion": "1.31.1",
+    "namespace": "istio-system",
+    "category": "Service Mesh",
+    "description": "CRDs e recursos compartilhados da service mesh.",
+    "notes": "A base precisa estar sincronizada antes de istiod. As versões de todos os componentes Istio selecionados devem coincidir.",
+    "dependencies": [],
+    "icon": "fa-cube"
+  },
+  {
+    "id": "istiod",
+    "title": "Istiod",
+    "chart": "istiod",
+    "repository": "https://blob.istio.io/istio-release/charts",
+    "version": "1.31.1",
+    "appVersion": "1.31.1",
+    "namespace": "istio-system",
+    "category": "Service Mesh",
+    "description": "Control plane para descoberta, identidade e configuração.",
+    "notes": "Sidecar por padrão; o preset Ambient configura o perfil ambient. A instalação não adiciona labels de injeção às suas workloads.",
+    "dependencies": [
+      "istio-base"
+    ],
+    "icon": "fa-cube"
+  },
+  {
+    "id": "istio-cni",
+    "title": "Istio CNI",
+    "chart": "cni",
+    "repository": "https://blob.istio.io/istio-release/charts",
+    "version": "1.31.1",
+    "appVersion": "1.31.1",
+    "namespace": "istio-system",
+    "category": "Service Mesh",
+    "description": "Agente de rede em cada nó, com configuração de plataforma.",
+    "notes": "DaemonSet com acesso ao host. Selecione a plataforma correta; k3d usa os paths de CNI do K3s.",
+    "dependencies": [
+      "istiod"
+    ],
+    "icon": "fa-cube"
+  },
+  {
+    "id": "istio-ztunnel",
+    "title": "Istio Ztunnel",
+    "chart": "ztunnel",
+    "repository": "https://blob.istio.io/istio-release/charts",
+    "version": "1.31.1",
+    "appVersion": "1.31.1",
+    "namespace": "istio-system",
+    "category": "Service Mesh",
+    "description": "Data plane Ambient L4 sem sidecars por workload.",
+    "notes": "Inclui CNI como dependência. Labels ambient, Gateway API e waypoints L7 são configuração posterior das workloads.",
+    "dependencies": [
+      "istio-cni"
+    ],
+    "icon": "fa-cube"
+  },
+  {
+    "id": "istio-ingress",
+    "title": "Istio Ingress Gateway",
+    "chart": "gateway",
+    "repository": "https://blob.istio.io/istio-release/charts",
+    "version": "1.31.1",
+    "appVersion": "1.31.1",
+    "namespace": "istio-system",
+    "category": "Service Mesh",
+    "description": "Entrada de tráfego para a mesh.",
+    "notes": "Service ClusterIP por padrão para coexistir com Traefik no k3d. Configure exposição, Gateway e VirtualService conforme sua rede.",
+    "dependencies": [
+      "istiod"
+    ],
+    "icon": "fa-cube"
+  },
+  {
+    "id": "istio-egress",
+    "title": "Istio Egress Gateway",
+    "chart": "gateway",
+    "repository": "https://blob.istio.io/istio-release/charts",
+    "version": "1.31.1",
+    "appVersion": "1.31.1",
+    "namespace": "istio-system",
+    "category": "Service Mesh",
+    "description": "Saída controlada de tráfego da mesh.",
+    "notes": "Service interno. ServiceEntry, Gateway e regras de saída são configurados depois.",
+    "dependencies": [
+      "istiod"
+    ],
+    "icon": "fa-cube"
+  },
+  {
+    "id": "kiali",
+    "title": "Kiali",
+    "chart": "kiali-server",
+    "repository": "https://kiali.org/helm-charts",
+    "version": "2.32.0",
+    "appVersion": "v2.32.0",
+    "namespace": "istio-system",
+    "category": "Observabilidade",
+    "description": "Visualize a topologia, saúde e tráfego do Istio.",
+    "notes": "Usa autenticação por token e Service interno. Prometheus é instalado como dependência; configure scraping de métricas da mesh para visualizar tráfego.",
+    "dependencies": [
+      "istiod",
+      "prometheus"
+    ],
+    "icon": "fa-diagram-project"
+  }
+]

@@ -1,0 +1,181 @@
+{
+  "kubernetesVersion": "1.35.3",
+  "profile": "ambient",
+  "results": [
+    {
+      "id": "kiali",
+      "chart": "kiali-server",
+      "version": "2.32.0",
+      "resourceKinds": {
+        "NetworkPolicy": 1,
+        "ServiceAccount": 1,
+        "ConfigMap": 1,
+        "ClusterRole": 1,
+        "ClusterRoleBinding": 1,
+        "Service": 1,
+        "Deployment": 1
+      }
+    },
+    {
+      "id": "istio-egress",
+      "chart": "gateway",
+      "version": "1.31.1",
+      "resourceKinds": {
+        "ServiceAccount": 1,
+        "Role": 1,
+        "RoleBinding": 1,
+        "Service": 1,
+        "Deployment": 1,
+        "HorizontalPodAutoscaler": 1
+      }
+    },
+    {
+      "id": "istio-ingress",
+      "chart": "gateway",
+      "version": "1.31.1",
+      "resourceKinds": {
+        "ServiceAccount": 1,
+        "Role": 1,
+        "RoleBinding": 1,
+        "Service": 1,
+        "Deployment": 1,
+        "HorizontalPodAutoscaler": 1
+      }
+    },
+    {
+      "id": "istio-ztunnel",
+      "chart": "ztunnel",
+      "version": "1.31.1",
+      "resourceKinds": {
+        "ServiceAccount": 1,
+        "DaemonSet": 1
+      }
+    },
+    {
+      "id": "istio-cni",
+      "chart": "cni",
+      "version": "1.31.1",
+      "resourceKinds": {
+        "ServiceAccount": 1,
+        "ConfigMap": 1,
+        "ClusterRole": 3,
+        "ClusterRoleBinding": 3,
+        "DaemonSet": 1
+      }
+    },
+    {
+      "id": "istiod",
+      "chart": "istiod",
+      "version": "1.31.1",
+      "resourceKinds": {
+        "ServiceAccount": 1,
+        "ConfigMap": 3,
+        "ClusterRole": 3,
+        "ClusterRoleBinding": 3,
+        "Role": 1,
+        "RoleBinding": 1,
+        "Service": 1,
+        "Deployment": 1,
+        "HorizontalPodAutoscaler": 1,
+        "MutatingWebhookConfiguration": 1,
+        "ValidatingWebhookConfiguration": 1
+      }
+    },
+    {
+      "id": "istio-base",
+      "chart": "base",
+      "version": "1.31.1",
+      "resourceKinds": {
+        "ServiceAccount": 1,
+        "CustomResourceDefinition": 15,
+        "ValidatingWebhookConfiguration": 1
+      }
+    },
+    {
+      "id": "grafana",
+      "chart": "grafana",
+      "version": "13.2.7",
+      "resourceKinds": {
+        "ServiceAccount": 2,
+        "Secret": 1,
+        "ConfigMap": 2,
+        "ClusterRole": 1,
+        "ClusterRoleBinding": 1,
+        "Service": 1,
+        "Deployment": 1,
+        "Pod": 1
+      }
+    },
+    {
+      "id": "prometheus",
+      "chart": "kube-prometheus-stack",
+      "version": "91.9.0",
+      "resourceKinds": {
+        "ServiceAccount": 6,
+        "Secret": 2,
+        "ClusterRole": 4,
+        "ClusterRoleBinding": 4,
+        "Service": 10,
+        "DaemonSet": 1,
+        "Deployment": 2,
+        "MutatingWebhookConfiguration": 1,
+        "ValidatingWebhookConfiguration": 1,
+        "Alertmanager": 1,
+        "Prometheus": 1,
+        "PrometheusRule": 35,
+        "ServiceMonitor": 12,
+        "Role": 1,
+        "RoleBinding": 1,
+        "Job": 2
+      }
+    },
+    {
+      "id": "external-secrets",
+      "chart": "external-secrets",
+      "version": "2.11.0",
+      "resourceKinds": {
+        "ServiceAccount": 3,
+        "Secret": 1,
+        "CustomResourceDefinition": 25,
+        "ClusterRole": 5,
+        "ClusterRoleBinding": 2,
+        "Role": 1,
+        "RoleBinding": 1,
+        "Service": 1,
+        "Deployment": 3,
+        "ValidatingWebhookConfiguration": 2
+      }
+    },
+    {
+      "id": "kyverno",
+      "chart": "kyverno",
+      "version": "3.9.1",
+      "resourceKinds": {
+        "ServiceAccount": 5,
+        "ConfigMap": 2,
+        "CustomResourceDefinition": 22,
+        "ClusterRole": 17,
+        "ClusterRoleBinding": 8,
+        "Role": 4,
+        "RoleBinding": 4,
+        "Service": 6,
+        "Deployment": 4,
+        "Pod": 5,
+        "Job": 3
+      }
+    },
+    {
+      "id": "argo-rollouts",
+      "chart": "argo-rollouts",
+      "version": "2.43.5",
+      "resourceKinds": {
+        "ServiceAccount": 1,
+        "ConfigMap": 2,
+        "CustomResourceDefinition": 5,
+        "ClusterRole": 4,
+        "ClusterRoleBinding": 1,
+        "Deployment": 1
+      }
+    }
+  ]
+}

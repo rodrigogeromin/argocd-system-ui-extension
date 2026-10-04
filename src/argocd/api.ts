@@ -1,4 +1,4 @@
-import type {RolloutsApplication} from '../features/rollouts/application';
+import type {AddonApplication} from '../features/catalog/types';
 export class ApiError extends Error {
   constructor(public readonly status: number, message: string) { super(message); this.name = 'ApiError'; }
 }
@@ -13,7 +13,7 @@ export function applicationURL(name: string, namespace: string): string {
   return new URL(`applications/${encodeURIComponent(namespace)}/${encodeURIComponent(name)}`, argoBaseURL()).href;
 }
 function isRecord(value: unknown): value is Record<string, unknown> { return !!value && typeof value === 'object' && !Array.isArray(value); }
-export function parseApplication(value: unknown): RolloutsApplication {
+export function parseApplication(value: unknown): AddonApplication {
   if (!isRecord(value) || !isRecord(value.metadata) || typeof value.metadata.name !== 'string' || !isRecord(value.spec)
     || typeof value.spec.project !== 'string' || !isRecord(value.spec.destination) || typeof value.spec.destination.namespace !== 'string') {
     throw new Error('A API retornou uma Application inválida.');
@@ -32,10 +32,10 @@ export function parseApplication(value: unknown): RolloutsApplication {
     const conditions = value.status.conditions;
     if (conditions !== undefined && (!Array.isArray(conditions) || conditions.some(item => !isRecord(item) || typeof item.type !== 'string' || typeof item.message !== 'string'))) throw new Error('A API retornou conditions inválidas.');
   }
-  return value as unknown as RolloutsApplication;
+  return value as unknown as AddonApplication;
 }
 export class ArgoClient {
-  async request(path: string, signal: AbortSignal, body?: RolloutsApplication): Promise<RolloutsApplication> {
+  async request(path: string, signal: AbortSignal, body?: AddonApplication): Promise<AddonApplication> {
     const controller = new AbortController();
     const abort = () => controller.abort();
     signal.addEventListener('abort', abort, {once: true});
@@ -59,13 +59,13 @@ export class ArgoClient {
       throw error;
     } finally { window.clearTimeout(timeout); signal.removeEventListener('abort', abort); }
   }
-  async get(name: string, namespace: string, signal: AbortSignal, project: string): Promise<RolloutsApplication | null> {
+  async get(name: string, namespace: string, signal: AbortSignal, project: string): Promise<AddonApplication | null> {
     if (!project) throw new Error('Informe o projeto para consultar a Application.');
     // Without a project, Argo CD obscures missing applications with HTTP 403, even for admin.
     try { return await this.request(`applications/${encodeURIComponent(name)}?appNamespace=${encodeURIComponent(namespace)}&projects=${encodeURIComponent(project)}`, signal); }
     catch (error) { if (error instanceof ApiError && error.status === 404) return null; throw error; }
   }
-  create(application: RolloutsApplication, signal: AbortSignal) {
+  create(application: AddonApplication, signal: AbortSignal) {
     return this.request('applications?validate=true&upsert=false', signal, application);
   }
 }
