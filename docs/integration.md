@@ -1,38 +1,28 @@
-# Evidência de instalação — v0.1.2
+# Evidência de implantação — v0.2.0
 
-Verificado em 2026-10-04 no contexto `k3d-dev`, namespace `argocd`, Deployment `argocd-server`, imagem `quay.io/argoproj/argocd:v3.5.1`. A API `/api/version` confirmou `v3.5.1` via port-forward.
+Verificado em 2026-10-04: Argo CD **3.5.1**, System Level, tag oficial **v3.5.1**, contexto **k3d-dev**, namespace **argocd**. O contrato continua aderente ao schema instalado da skill e ao runtime React 19.2.6 auditado.
 
-O workflow [Release extension](https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37182063681) publicou a [release v0.1.2](https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/tag/v0.1.2). Os assets baixados foram conferidos contra o relatório de validação da release, o checksum e a allowlist de arquivos. A sourceRevision e o bundle da release correspondem à validação local.
+A [release v0.2.0](https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/tag/v0.2.0) foi publicada pelo [workflow](https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37198065337) com os checks aprovados. O [CI](https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37198064358) também passou. Commit da implementação: `d244367`.
 
-O patch estratégico da release acrescentou `argocd-extension-installer-argo-rollouts` ao Deployment, preservando `argocd-extension-installer-service-catalog` e todos os volumes existentes. O novo pod `argocd-server-7b489797fc-t2454` concluiu os dois init containers com exit code 0 e ficou Ready. `kubectl rollout status` confirmou a conclusão.
+O patch da release atualizou o init container existente, preservando a outra extension service-catalog. O pod `argocd-server-f5887ff6d-5j4xb` está Ready, os dois init containers terminaram com exit code 0 e o rollout concluiu. O installer confirmou checksum e instalação. A API `/api/version` confirmou v3.5.1 e `/extensions.js` contém os bytes exatos do bundle publicado. O arquivo único continua `extension-argo-rollouts-installer.js`, evitando registro duplicado.
 
-O log do installer confirmou download, validação de checksum e instalação. O arquivo `/tmp/extensions/resources/extension-argo-rollouts-installer.js` tem o SHA-256 esperado. `/extensions.js` servido pelo novo pod contém os bytes exatos desse bundle e a extension de catálogo existente.
-
-Identidades verificadas:
-
-| Artefato | SHA-256 |
+| Identidade | SHA-256 |
 | --- | --- |
-| Fontes | `fc90c32e769a202199a79b24cd9f106bf424645c0e4eb40a58580cbf18e1bfb8` |
-| Bundle instalado/servido | `44836a805f1c6a4b82adf34615ec542bc192c6f213d768673d40cbcaba402374` |
-| tar.gz da release instalado | `e3020b36553a3d2fd0362984f1f7d25be3e8a98d6dbaae4f28c1d022b61613d2` |
-| tar.gz local | `7d4843f1ed4993c88aebda57dcce9d7d898ece1e728016220d6314aa8fe5a43f` |
+| Fontes | `d5e0ee9deae373ab9f88fdbbb720f692e9ce00639dabee94a44f29a751e75210` |
+| Bundle instalado e servido | `a9bdbb24b0523bd2c1608929ed4d25165d9c532124eda14c585a46bbb6aaf2e5` |
+| tar.gz publicado | `d7ed1c4e5db6c2e1d67b1bb72e2fb154e531f00d6ee01b0b497506679c59ab13` |
+| tar.gz local | `025877ac96931a3f825d65d7003984c9c5710dbc75d319a5e381191e9ef108f2` |
 
-Os pacotes local e da release diferem pelo modo do arquivo no tar (`0664` local, `0644` no runner); o conteúdo JS é idêntico. O checksum utilizado na instalação é o do asset publicado.
+Os archives diferem apenas pelo modo do arquivo no tar (0664 local / 0644 runner); fontes e conteúdo JS correspondem. O asset publicado foi validado contra seu próprio checksum e relatório.
 
-A instalação persiste em novos pods pelo init container. O Deployment observado não tem ownerReference nem rótulo de gestão Helm; se esse Deployment vier a ser gerenciado por GitOps/Helm, incorpore o patch à fonte de verdade.
+A consulta real, somente leitura, autenticada como admin com `projects=default`, retornou 200/Synced/Healthy para Argo Rollouts e 404 para os outros 11 nomes. Não houve criação de addons, atualização da Application Rollouts ou alteração de RBAC. Credenciais foram utilizadas apenas em memória.
 
-## Correção do menu lateral
+O primeiro pod teve timeout de DNS ao baixar github.com. O novo pod concluiu o download e a verificação. Uma alteração diagnóstica temporária no encaminhamento CoreDNS foi revertida; o upstream original voltou a responder. A configuração de DNS original foi preservada ao concluir.
 
-O usuário relatou que v0.1.0 não apareceu no menu. O harness reproduziu o registro antes da montagem do App: o host ainda não havia instalado o listener System Level, e o evento foi perdido. A correção introduzida em v0.1.1 aguarda a montagem de `#app` antes de registrar, sem duplicar o registro. O novo teste confirma a sequência `Documentation`, `Argo Rollouts`. A correção foi publicada e instalada; o comportamento no navegador do usuário ainda precisa ser observado.
+## Validação e limites
 
-## Consulta da Application autenticada como admin
+Passaram `runtime:setup`, `npm ci`, `validate` e `evidence:check`: 43 testes de domínio/API/UI e 2 testes do harness de produção. npm audit: zero vulnerabilidades. Os 12 componentes do catálogo renderizaram via Helm para Kubernetes 1.35.3, sem identidades de recursos compartilhadas entre seus manifestos. Templates renderizados não provam o funcionamento de todos os controllers.
 
-Após o menu aparecer, o usuário relatou `permission denied` ao usar a jornada. Os logs confirmaram `user=admin`, `application does not exist` e o GET sem projeto. Uma reprodução real autenticada como admin confirmou HTTP 403/code 7 sem projeto e HTTP 404/code 5 com `projects=default`, para a mesma Application ausente.
+Não havia navegador disponível no conector da sessão. O menu e a jornada multi-addon foram testados no harness; a interação no navegador real continua **not-run**, e a matriz de versões integradas permanece vazia. O arquivo instalado e a resposta do servidor estão conferidos. O relatório local não é apresentado como integração completa.
 
-A v0.1.2 envia o projeto configurado no preflight e em todos os polls. O teste de regressão falhou com o cliente anterior e passou com a correção. Erros reais 401/403 continuam bloqueando a criação. Não houve alteração de RBAC. O projeto default observado permite repositório, destino e recursos de cluster necessários ao chart.
-
-## Limites da evidência
-
-Não havia navegador disponível no conector de computer use da sessão. Registro e renderização do bundle, criação da Application e acompanhamento são exercitados por **30 testes de domínio/API + 2 testes do harness de produção**, com sucesso local e no GitHub Actions. Não houve interação observada na UI real, nem criação da Application Rollouts no cluster: o usuário pode executar a jornada pelo botão após recarregar o Argo CD.
-
-A instalação do arquivo e a resposta do servidor estão verificadas. A integração completa de navegador continua `not-run`; a matriz de versões integradas fica vazia. `validation-report.json` permanece evidência local com `releaseComplete: false`. O registro estruturado dos fatos de implantação está em `integration-evidence.json`.
+O histórico de v0.1.2, incluindo as regressões do registro antes da montagem React e do GET sem projeto, foi preservado em `previousReleaseEvidence` no [registro estruturado](integration-evidence.json). O catálogo mantém ambas as correções. O usuário havia confirmado o menu antigo visível; o Rollouts existente foi observado saudável nesta implantação.

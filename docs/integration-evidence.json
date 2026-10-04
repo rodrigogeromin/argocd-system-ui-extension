@@ -1,33 +1,43 @@
 {
-  "recordedAt": "2026-10-04T06:14:04.806161+00:00",
+  "recordedAt": "2026-10-04T11:23:14.102046+00:00",
   "target": "3.5.1",
   "sourceTag": "v3.5.1",
   "profile": "system-level",
-  "release": "https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/tag/v0.1.2",
-  "releaseWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37182063681",
-  "ciWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37182062520",
+  "release": "https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/tag/v0.2.0",
+  "releaseWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37198065337",
+  "ciWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37198064358",
+  "implementationCommit": "d244367191de8691e66e5451ad7ab21619eadfe8",
   "context": "k3d-dev",
   "namespace": "argocd",
+  "pod": "argocd-server-f5887ff6d-5j4xb",
   "deployment": {
+    "name": "argocd-server",
     "rollout": "passed",
-    "installerExitCode": 0,
     "checksumValidation": "passed",
     "podBundleHash": "matched",
     "servedBundleBytes": "matched",
     "existingExtensions": [
       "service-catalog"
     ],
-    "name": "argocd-server"
+    "initContainers": [
+      {
+        "name": "argocd-extension-installer-argo-rollouts",
+        "exitCode": 0
+      },
+      {
+        "name": "argocd-extension-installer-service-catalog",
+        "exitCode": 0
+      }
+    ]
   },
-  "pod": "argocd-server-7b489797fc-t2454",
   "installerImage": "quay.io/argoprojlabs/argocd-extension-installer:v1.1.0@sha256:6cc786ba4dc96ba81d5010fbf92adabef15aff89753a55e22b8d829cd8b6e2a8",
-  "sourceRevision": "fc90c32e769a202199a79b24cd9f106bf424645c0e4eb40a58580cbf18e1bfb8",
-  "bundleSha256": "44836a805f1c6a4b82adf34615ec542bc192c6f213d768673d40cbcaba402374",
-  "releasePackageSha256": "e3020b36553a3d2fd0362984f1f7d25be3e8a98d6dbaae4f28c1d022b61613d2",
-  "localPackageSha256": "7d4843f1ed4993c88aebda57dcce9d7d898ece1e728016220d6314aa8fe5a43f",
+  "sourceRevision": "d5e0ee9deae373ab9f88fdbbb720f692e9ce00639dabee94a44f29a751e75210",
+  "bundleSha256": "a9bdbb24b0523bd2c1608929ed4d25165d9c532124eda14c585a46bbb6aaf2e5",
+  "releasePackageSha256": "d7ed1c4e5db6c2e1d67b1bb72e2fb154e531f00d6ee01b0b497506679c59ab13",
+  "localPackageSha256": "025877ac96931a3f825d65d7003984c9c5710dbc75d319a5e381191e9ef108f2",
   "packageDifference": "Local tar entry mode 0664; release tar entry mode 0644. Sources and JS bundle identical.",
   "localValidation": {
-    "domainApiTests": 30,
+    "domainApiTests": 43,
     "productionHarnessTests": 2,
     "commands": [
       "npm run runtime:setup",
@@ -38,45 +48,162 @@
     "result": "passed",
     "npmAuditVulnerabilities": 0
   },
+  "chartValidation": {
+    "components": 12,
+    "status": "rendered",
+    "kubeVersion": "1.35.3",
+    "report": "chart-render-validation.json",
+    "controllerRuntime": "not-run"
+  },
+  "authenticatedApiProbe": {
+    "subject": "admin",
+    "project": "default",
+    "method": "GET",
+    "results": [
+      {
+        "addon": "argo-rollouts",
+        "status": 200,
+        "sync": "Synced",
+        "health": "Healthy"
+      },
+      {
+        "addon": "kyverno",
+        "status": 404
+      },
+      {
+        "addon": "external-secrets",
+        "status": 404
+      },
+      {
+        "addon": "prometheus",
+        "status": 404
+      },
+      {
+        "addon": "grafana",
+        "status": 404
+      },
+      {
+        "addon": "istio-base",
+        "status": 404
+      },
+      {
+        "addon": "istiod",
+        "status": 404
+      },
+      {
+        "addon": "istio-cni",
+        "status": 404
+      },
+      {
+        "addon": "istio-ztunnel",
+        "status": 404
+      },
+      {
+        "addon": "istio-ingress",
+        "status": 404
+      },
+      {
+        "addon": "istio-egress",
+        "status": 404
+      },
+      {
+        "addon": "kiali",
+        "status": 404
+      }
+    ],
+    "applicationsCreated": 0,
+    "rbacChanged": false
+  },
   "browserInteraction": {
     "status": "not-run",
     "reason": "No browser surfaces available via cua.getState"
   },
-  "rolloutsControllerInstallation": {
-    "status": "not-run",
-    "reason": "Extension was installed; controller creation awaits user action in the page"
-  },
   "integratedVersions": [],
-  "previousRelease": {
-    "version": "v0.1.0",
-    "userReported": "System Level menu entry missing",
-    "regressionReproduced": true
+  "dnsIncident": {
+    "initialInstallerError": "github.com DNS timeout",
+    "finalInstaller": "passed",
+    "originalCoreDNSConfiguration": "restored after temporary diagnostic change; upstream subsequently responded"
   },
-  "startupRegression": {
-    "status": "passed",
-    "scenario": "React 19 schedules host mount before the extensions script executes",
-    "expectedMenu": [
-      "Documentation",
-      "Argo Rollouts"
-    ],
-    "registrationCount": 1
-  },
-  "authenticatedApiProbe": {
-    "subject": "admin",
-    "application": "argo-rollouts",
-    "appNamespace": "argocd",
-    "withoutProject": {
-      "httpStatus": 403,
-      "grpcCode": 7
+  "previousReleaseEvidence": {
+    "recordedAt": "2026-10-04T06:14:04.806161+00:00",
+    "target": "3.5.1",
+    "sourceTag": "v3.5.1",
+    "profile": "system-level",
+    "release": "https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/tag/v0.1.2",
+    "releaseWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37182063681",
+    "ciWorkflow": "https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37182062520",
+    "context": "k3d-dev",
+    "namespace": "argocd",
+    "deployment": {
+      "rollout": "passed",
+      "installerExitCode": 0,
+      "checksumValidation": "passed",
+      "podBundleHash": "matched",
+      "servedBundleBytes": "matched",
+      "existingExtensions": [
+        "service-catalog"
+      ],
+      "name": "argocd-server"
     },
-    "withProjectDefault": {
-      "httpStatus": 404,
-      "grpcCode": 5
+    "pod": "argocd-server-7b489797fc-t2454",
+    "installerImage": "quay.io/argoprojlabs/argocd-extension-installer:v1.1.0@sha256:6cc786ba4dc96ba81d5010fbf92adabef15aff89753a55e22b8d829cd8b6e2a8",
+    "sourceRevision": "fc90c32e769a202199a79b24cd9f106bf424645c0e4eb40a58580cbf18e1bfb8",
+    "bundleSha256": "44836a805f1c6a4b82adf34615ec542bc192c6f213d768673d40cbcaba402374",
+    "releasePackageSha256": "e3020b36553a3d2fd0362984f1f7d25be3e8a98d6dbaae4f28c1d022b61613d2",
+    "localPackageSha256": "7d4843f1ed4993c88aebda57dcce9d7d898ece1e728016220d6314aa8fe5a43f",
+    "packageDifference": "Local tar entry mode 0664; release tar entry mode 0644. Sources and JS bundle identical.",
+    "localValidation": {
+      "domainApiTests": 30,
+      "productionHarnessTests": 2,
+      "commands": [
+        "npm run runtime:setup",
+        "npm ci",
+        "npm run validate",
+        "npm run evidence:check"
+      ],
+      "result": "passed",
+      "npmAuditVulnerabilities": 0
     },
-    "rbacChanged": false
-  },
-  "userReportedBrowser": {
-    "systemMenu": "visible in v0.1.1",
-    "installationPreflight": "permission denied in v0.1.1"
+    "browserInteraction": {
+      "status": "not-run",
+      "reason": "No browser surfaces available via cua.getState"
+    },
+    "rolloutsControllerInstallation": {
+      "status": "not-run",
+      "reason": "Extension was installed; controller creation awaits user action in the page"
+    },
+    "integratedVersions": [],
+    "previousRelease": {
+      "version": "v0.1.0",
+      "userReported": "System Level menu entry missing",
+      "regressionReproduced": true
+    },
+    "startupRegression": {
+      "status": "passed",
+      "scenario": "React 19 schedules host mount before the extensions script executes",
+      "expectedMenu": [
+        "Documentation",
+        "Argo Rollouts"
+      ],
+      "registrationCount": 1
+    },
+    "authenticatedApiProbe": {
+      "subject": "admin",
+      "application": "argo-rollouts",
+      "appNamespace": "argocd",
+      "withoutProject": {
+        "httpStatus": 403,
+        "grpcCode": 7
+      },
+      "withProjectDefault": {
+        "httpStatus": 404,
+        "grpcCode": 5
+      },
+      "rbacChanged": false
+    },
+    "userReportedBrowser": {
+      "systemMenu": "visible in v0.1.1",
+      "installationPreflight": "permission denied in v0.1.1"
+    }
   }
 }
