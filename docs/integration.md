@@ -1,28 +1,26 @@
-# Evidência de implantação — v0.2.0
+# Evidência de implantação — v0.2.1
 
-Verificado em 2026-10-04: Argo CD **3.5.1**, System Level, tag oficial **v3.5.1**, contexto **k3d-dev**, namespace **argocd**. O contrato continua aderente ao schema instalado da skill e ao runtime React 19.2.6 auditado.
+Verificado em 2026-10-04: Argo CD **3.5.1**, System Level, tag oficial **v3.5.1**, contexto **k3d-dev**, namespace **argocd**. Schema validado pela skill instalada; runtime React 19.2.6 preservado.
 
-A [release v0.2.0](https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/tag/v0.2.0) foi publicada pelo [workflow](https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37198065337) com os checks aprovados. O [CI](https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37198064358) também passou. Commit da implementação: `d244367`.
+A [release v0.2.1](https://github.com/rodrigogeromin/argocd-system-ui-extension/releases/tag/v0.2.1) adiciona **Addons** no menu, lista/detalhe com breadcrumb, links diretos e histórico do navegador, abas Resumo/Parâmetros/Manifesto e edição tipada dos parâmetros Helm. O [workflow de release](https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37199102862) e o [CI](https://github.com/rodrigogeromin/argocd-system-ui-extension/actions/runs/37199101590) passaram. Implementação: `2a81234`, enviada a develop.
 
-O patch da release atualizou o init container existente, preservando a outra extension service-catalog. O pod `argocd-server-f5887ff6d-5j4xb` está Ready, os dois init containers terminaram com exit code 0 e o rollout concluiu. O installer confirmou checksum e instalação. A API `/api/version` confirmou v3.5.1 e `/extensions.js` contém os bytes exatos do bundle publicado. O arquivo único continua `extension-argo-rollouts-installer.js`, evitando registro duplicado.
+O patch da release atualizou o init container existente, preservando service-catalog e os volumes. O pod `argocd-server-78547b6f65-vx7sv` está Ready, ambos os init containers terminaram com código 0 e o rollout concluiu. Checksum conferido pelo installer. `/api/version` confirmou v3.5.1; `/extensions.js` contém os bytes exatos do bundle publicado. O nome legado do arquivo evita registros duplicados.
 
 | Identidade | SHA-256 |
 | --- | --- |
-| Fontes | `d5e0ee9deae373ab9f88fdbbb720f692e9ce00639dabee94a44f29a751e75210` |
-| Bundle instalado e servido | `a9bdbb24b0523bd2c1608929ed4d25165d9c532124eda14c585a46bbb6aaf2e5` |
-| tar.gz publicado | `d7ed1c4e5db6c2e1d67b1bb72e2fb154e531f00d6ee01b0b497506679c59ab13` |
-| tar.gz local | `025877ac96931a3f825d65d7003984c9c5710dbc75d319a5e381191e9ef108f2` |
+| Fontes | `f0b4e4564327a812aa622742a0a4a8c738e1f7fcdd206c5bb30c1014373928b7` |
+| Bundle instalado/servido | `9e57ec2fff5bf01a1ebe02664f77878c233db02fd82a09c15a85d3eab2164461` |
+| tar.gz publicado | `73fc189b462c927111e4dd0561b12ad3b685e21d17cdb2f66f95462f374710a6` |
+| tar.gz local | `b40f3e87da4256397af21d80ed8b8315fdd01b377f86d4aa4d83867fc5600b86` |
 
-Os archives diferem apenas pelo modo do arquivo no tar (0664 local / 0644 runner); fontes e conteúdo JS correspondem. O asset publicado foi validado contra seu próprio checksum e relatório.
+O modo da entrada no archive continua diferente entre local e runner (0664/0644), com JS e fontes idênticos. O asset publicado corresponde ao seu relatório e checksum.
 
-A consulta real, somente leitura, autenticada como admin com `projects=default`, retornou 200/Synced/Healthy para Argo Rollouts e 404 para os outros 11 nomes. Não houve criação de addons, atualização da Application Rollouts ou alteração de RBAC. Credenciais foram utilizadas apenas em memória.
-
-O primeiro pod teve timeout de DNS ao baixar github.com. O novo pod concluiu o download e a verificação. Uma alteração diagnóstica temporária no encaminhamento CoreDNS foi revertida; o upstream original voltou a responder. A configuração de DNS original foi preservada ao concluir.
+A Application Rollouts preservou UID e spec comparados ao snapshot anterior à implantação e continua Synced/Healthy. Nenhum addon foi criado nesta atualização. Nenhuma alteração de DNS ou RBAC foi necessária nesta release.
 
 ## Validação e limites
 
-Passaram `runtime:setup`, `npm ci`, `validate` e `evidence:check`: 43 testes de domínio/API/UI e 2 testes do harness de produção. npm audit: zero vulnerabilidades. Os 12 componentes do catálogo renderizaram via Helm para Kubernetes 1.35.3, sem identidades de recursos compartilhadas entre seus manifestos. Templates renderizados não provam o funcionamento de todos os controllers.
+Passaram `runtime:setup`, `npm ci`, `validate` e `evidence:check`: **45 testes de domínio/API/UI + 2 do harness de produção**. Os novos testes cobrem links diretos, histórico, edição de parâmetros e preservação das configurações ao voltar. npm audit: zero vulnerabilidades. Os charts não mudaram; os 12 renders Helm são evidência da v0.2.0.
 
-Não havia navegador disponível no conector da sessão. O menu e a jornada multi-addon foram testados no harness; a interação no navegador real continua **not-run**, e a matriz de versões integradas permanece vazia. O arquivo instalado e a resposta do servidor estão conferidos. O relatório local não é apresentado como integração completa.
+O usuário confirmou que o catálogo **v0.2.0 funcionou**. Essa observação não valida automaticamente a navegação nova. Não houve interação observada em navegador real na **v0.2.1**; integração completa permanece **not-run**, com matriz vazia. Instalação do arquivo, rollout e bytes servidos estão verificados separadamente.
 
-O histórico de v0.1.2, incluindo as regressões do registro antes da montagem React e do GET sem projeto, foi preservado em `previousReleaseEvidence` no [registro estruturado](integration-evidence.json). O catálogo mantém ambas as correções. O usuário havia confirmado o menu antigo visível; o Rollouts existente foi observado saudável nesta implantação.
+O histórico da implantação anterior foi preservado em `previousReleaseEvidence` no [registro estruturado](integration-evidence.json), incluindo a consulta autenticada por projeto e as correções de menu/permissão.
